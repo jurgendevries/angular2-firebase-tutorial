@@ -25,7 +25,7 @@ Aangezien we in dit blog geen Authenticatie gaan behandelen gaan we de rechten v
 
 Nu zijn de gegevens publiekelijk toegankelijk. Gebruik deze instellingen dus niet wanneer je (bedrijfs) gevoelige data wil opslaan.
 
-Wanneer je in het topmenu teruggaat naar <strong>Data</strong>, zie je de url van je database:
+Wanneer je in het topmenu teruggaat naar **Data**, zie je de url van je database:
 [https://NAAM-PROJECT.firebaseio.com/](https://NAAM-PROJECT.firebaseio.com/ "Firebase project link")
 
 Aangezien er nog geen data ingevoerd is zie je hier verder niks.
@@ -72,7 +72,7 @@ Om te kunnen communiceren met ons Firebase project gaan we 2 libraries via NPM t
 ```sh
 npm install angularfire2 firebase --save
 ```
-Wanneer de dependencies geïnstalleerd zijn ga je in een IDE naar <strong>src/app/app.module.ts</strong>. Zoek je bewaarde Firebase webapp configuratie er weer bij en voeg Firebase op de volgende manier toe:
+Wanneer de dependencies geïnstalleerd zijn ga je in een IDE naar **src/app/app.module.ts**. Zoek je bewaarde Firebase webapp configuratie er weer bij en voeg Firebase op de volgende manier toe:
 ``` diff
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -80,12 +80,14 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 + import { AngularFireModule } from 'angularfire2';
 import { AppComponent } from './app.component';
+
 + export const firebaseConfig = {
 +  apiKey: '<your-key>',
 +  authDomain: '<your-project-authdomain>',
 +  databaseURL: '<your-database-URL>',
 +  storageBucket: '<your-storage-bucket>'
 + };
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -97,4 +99,50 @@ import { AppComponent } from './app.component';
   bootstrap: [ AppComponent ]
 })
 export class AppModule {}
+```
+Vervolgens voegen we Firebase aan **src/app/app.component.ts** toe om het te kunnen gebruiken.
+``` diff
+import { Component } from '@angular/core';
++ import { AngularFire, FirebaseListObservable } from 'angularfire2';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+
+export class AppComponent {
++  constructor(
++    af: AngularFire
++  ) {}
+}
+```
+We hebben nu Firebase aan het project toegevoegd maar doen er nog niks mee. Om te testen of het echt werkt gaan Angular aan een lijst met items in Firebase koppelen. Pas **src/app/app.component.ts** aan naar het volgende:
+``` diff
+import { Component } from '@angular/core';
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: 'app.component.html',
+  styleUrls: ['app.component.css']
+})
+
+export class AppComponent {
++  items: FirebaseListObservable<any[]>;
+
+  constructor(
+    af: AngularFire
+  ) {
++    this.items = af.database.list('/items');
+  }
+}
+```
+En **src/app/app.component.html** naar:
+``` diff
++<ul>
++  <li class="text" *ngFor="let item of items | async">
++    {{item.value}}
++  </li>
++</ul>
 ```
