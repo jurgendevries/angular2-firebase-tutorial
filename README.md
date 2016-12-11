@@ -438,3 +438,34 @@ export class AppComponent {
 </div>
 ```
 Verwijder vervolgens ook de items array via het Firebase Data Dashboard, deze hebben we niet meer nodig.
+
+# Model
+Door het gebruik van TypeScript hebben we de mogelijkheid om types mee te geven aan variabelen en parameters in functies. Wanneer je een functie definieert die een integer verwacht om mee te rekenen, maar je roept die functie per ongeluk aan met een string krijg je natuurlijk onverwachte uitkomsten. Door types mee te geven aan je functie parameters krijg je van je IDE/Editor al meldingen dat je verkeerde type parameters meegeeft in je functie aanroep. Hierdoor wordt je eerder op je fouten gewezen en dit scheelt je later een hoop debuggen.
+
+Het zou dan ook mooi zijn om de functies in het groep component een parameter van het type groep mee te geven.
+Maak in de groep folder een nieuwe bestand aan met de naam **src/groep/groep.model.ts**:
+``` typescript
+export class Groep {
+    constructor(
+        public titel: string,
+    ) {}
+};
+```
+Het lijkt wat overdreven om voor een groep met alleen maar een titel van het type string een model aan te maken. Toch denk ik dat het goed is om je zelf aan te leren dit altijd wel te doen. Wanneer je bijvoorbeeld user authentication aan deze applicatie toe zou voegen wil je een user ID per groep opslaan zodat je weet welke groepen bij welke user horen. Misschien moeten users meerdere adresboeken aan kunnen maken en dan wil je per groep een adresboek ID opslaan.
+Om gebruik te maken van dit model voegen we het eerst aan het groep component toe. Begin met het importeren van het groep model in **src/groep/groep.component.ts**:
+import { Groep } from './groep.model';
+Vervolgens gebruiken we het model om een nieuwe groep aan te maken en door te geven aan Firebase in de groepToevoegen methode:
+groepToevoegen(formData: any): void {
+    if (formData.valid) {
+      this.groepen.push(new Groep(formData.value.titel))
+       .then(response => {
+          console.log("Groep toegevoegd!");
+          formData.reset();
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }    
+}
+Probeer je nu nog een element mee te geven in bij het aanmaken van de groep, of een titel die geen string is, dan krijg je hier een foutmelding van in je commando venster (of je IDE/editor als deze TypeScript ondersteuning heeft).
+
