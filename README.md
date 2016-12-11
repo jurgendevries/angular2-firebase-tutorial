@@ -177,6 +177,11 @@ Om een iets prettiger uitziende applicatie te krijgen voegen we bootstrap toe aa
 Daarnaast zetten we een div met de class **container** om onze lijst heen in **src/app/app.component.html**:
 ``` html
 <div class="container">
+  <ul>
+    <li class="text" *ngFor="let item of items | async">
+      {{item.value}}
+    </li>
+  </ul>
 </div>
 ```
 
@@ -292,7 +297,7 @@ Om de functie waar de knop naar verwijst te kunnen realiseren moeten we eerst ee
 En dan ziet er dan als volgt uit:
 ``` diff
 import { Component, OnInit } from '@angular/core';
-+import { AngularFire, FirebaseListObservable } from 'angularfire2';
++ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 
 @Component({
   selector: 'app-groep',
@@ -323,5 +328,113 @@ export class GroepComponent implements OnInit {
   }
 
 }
-
+```
 De formData krijgen we vanuit het formulier meegestuurd, wanneer iemand deze functie toch probeert aan te roepen zonder dat de data valide is, gebeurt er nog niks. Wanneer de data wel valide is wordt er een object toegevoegd aan het FirebaseListObject.  Het pushen van een object naar een FirebaseListObservable geeft een promise terug. Met de then methode vangen we een succesvolle response op en met de catch methode eventuele fouten en loggen deze in de console. Met de titel property wordt de lijst met groepen vervolgens weer op het scherm getoond.
+
+# Router
+Omdat we niet alles in 1 overzicht willen tonen maar per groep de contacten en een overzicht van de groepen in het contactenboek zullen we verschillende routes in de applicatie beschikbaar moeten stellen. Binnen Angular2 doen we dit met een router.
+
+Momenteel is het nog niet mogelijk om dit vanuit de AngularCLI te genereren dus doen we dit met hand.
+
+Om de router te activeren zijn een aantal stappen benodigd. In **src/app/app.component.html** voegen we de tag <router-outlet></router-outlet> toe net voor de sluit tag van de container-div. 
+``` html
+<div class="container">
+  <ul>
+    <li class="text" *ngFor="let item of items | async">
+      {{item.value}}
+    </li>
+  </ul>
++  <router-outlet></router-outlet>
+</div>
+```
+Dit is waar de output van de router straks terug te vinden is. Alles wat er omheen staat zal altijd in beeld zijn. Maar wat binnen de router-outlet getoond wordt is afhankelijk van de url.
+
+Daarnaast hebben we een bestand **src/app/app.routing.ts** nodig waar we onze routes kunnen definiëren. Maak het bestand **src/app/app.routing.ts** aan met de volgende inhoude:
+``` typescript
+import { ModuleWithProviders } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { GroepComponent } from './groep/groep.component';
+const appRoutes: Routes = [
+    {
+        path: 'groepen',
+        component: GroepComponent
+    },
+    {
+        path: '**',
+        redirectTo: '/groepen',
+        pathMatch: 'full'
+    }
+];
+
+export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
+```
+We importeren de benodigde onderdelen uit Angular en importeren ook het groep component.
+Daarna maken we een constante variabele aan, deze zal namelijk niet veranderen tijdens het gebruik van de applicatie, en definiëren hier de routes in als objecten. Elke route moet minimaal bestaan uit een pad (de url achter de slash) en het component wat daaraan gekoppeld moet worden. Het tweede pad dat we aanmaken wordt gebruikt wanneer er geen match met een van de voorgaande paden gevonden is en in dit geval verwijzen we dan ook naar ons groep component.
+Met de laatste regel stellen we de router beschikbaar voor onze applicatie. 
+
+Vervolgens importeren we de router in **src/app/app.module.ts** en we voegen **routing** toe aan de import array:
+``` diff
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { AngularFireModule } from 'angularfire2';
++ import { routing } from './app.routing';
+import { AppComponent } from './app.component';
+import { GroepComponent } from './groep/groep.component';
+
+export const firebaseConfig = {
+    apiKey: "AIzaSyD1LgKHv8s8-awyabqjYfG5y-1D7_fKn5I",
+    authDomain: "angularfirebase-276b0.firebaseapp.com",
+    databaseURL: "https://angularfirebase-276b0.firebaseio.com",
+    storageBucket: "angularfirebase-276b0.appspot.com",
+};
+
+@NgModule({
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    AngularFireModule.initializeApp(firebaseConfig),
++    routing
+  ],
+  declarations: [ AppComponent, GroepComponent ],
+  bootstrap: [ AppComponent ]
+})
+
+export class AppModule {}
+```
+
+Uit het app component halen we nu alle referenties naar items weg en ook de firebase koppeling kan hier inmiddels weggehaald worden. Dit doen we nu immers in het groep component. 
+**src/app/app.component.ts**:
+``` diff
+import { Component } from '@angular/core';
+- import { AngularFire, FirebaseListObservable } from 'angularfire2';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+
+export class AppComponent {
+-  items: FirebaseListObservable<any[]>;
+
+  constructor(
+-    this.items = af.database.list('/items');
+  ) {}
+}
+```
+**src/app/app.component.html**:
+``` diff
+<div class="container">
+-  <ul>
+-    <li class="text" *ngFor="let item of items | async">
+-      {{item.value}}
+-    </li>
+-  </ul>
+  <router-outlet></router-outlet>
+</div>
+```
+Verwijder vervolgens ook de items array via het Firebase Data Dashboard, deze hebben we niet meer nodig.
