@@ -184,28 +184,28 @@ Daarnaast zetten we een div met de class **container** om onze lijst heen in **s
 Omdat de data als JSON opgeslagen wordt kunnen geen gebruik maken van tabellen. Hoe gaan we onze database inrichten?
 We kunnen ervoor kiezen om groepen op te slaan met daarin genest onze contacten:
 *	Groepen
-..*	–KT_uwF2FH23j
-....*	NAME: Groep1
-......*	CONTACTEN: Contacten
-........*	–KT_xvfDFm2mk
-..........*	NAME: Contact1
-........*	–KT_xvfDFm2mk
-..........*	NAME: Contact1
-........*	–KT_xvfDFm2mk
-..........*	NAME: Contact1
-........*	–KT_xvfDFm2mk
-..........*	NAME: Contact1
-..*	–KT_uwF3FH23j
-....*	NAME: Groep2
-......*	CONTACTEN: Contacten
-........*	–KT_xvfDFm2mk
-..........*	NAME: Contact1
-........*	–KT_xvfDFm3mk
-..........*	NAME: Contact1
-........*	–KT_xvfDFm4mk
-..........*	NAME: Contact1
-........*	–KT_xvfDFm5mk
-..........*	NAME: Contact1
+  *	–KT_uwF2FH23j
+    *	NAME: Groep1
+      *	CONTACTEN: Contacten
+        *	–KT_xvfDFm2mk
+          *	NAME: Contact1
+        *	–KT_xvfDFm2mk
+          *	NAME: Contact1
+        *	–KT_xvfDFm2mk
+          *	NAME: Contact1
+        *	–KT_xvfDFm2mk
+          *	NAME: Contact1
+  *	–KT_uwF3FH23j
+    *	NAME: Groep2
+      *	CONTACTEN: Contacten
+        *	–KT_xvfDFm2mk
+          *	NAME: Contact1
+        *	–KT_xvfDFm3mk
+          *	NAME: Contact1
+        *	–KT_xvfDFm4mk
+          *	NAME: Contact1
+        *	–KT_xvfDFm5mk
+          *	NAME: Contact1
 
 Voor de app die we gaan maken zal de hoeveelheid data niet wereldschokkend groot zijn. Maar wanneer je een project begint met serieuze hoeveelheden data, is dit geen goed idee. Firebase moet om alleen een lijstje groepen binnen te halen ook alles binnenhalen wat er onder die groepen hangt. Naarmate de hoeveelheid data toeneemt gaat dit performance problemen opleveren.
 Hoe gaan we dan wel onze data opslaan, we kunnen immers geen tabellen aanmaken zoals een SQL-database. Gelukkig slaat Firebase elk item voor ons op met uniek ID. Laten we eens kijken of we daar een beter datamodel mee kunnen maken:
