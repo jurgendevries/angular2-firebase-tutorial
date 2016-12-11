@@ -146,3 +146,22 @@ En **src/app/app.component.html** naar:
 +  </li>
 +</ul>
 ```
+Omdat er nog geen data in Firebase staat, gaan we deze direct in Firebase toevoegen. Via het dashboard ga je in het linker menu naar database. Via het plusje op het hoofd element kun je makkelijk data toevoegen.
+Geef de naam **items** op en laat het waarde veld leeg. Klik op het plusje van het nieuwe element en geef hier de naam **item1** aan. Laat ook hier het waarde veld leeg en klik op het plusje van dit element. In het nieuwe element geef je als naam **value** op en in het waarde veld zet je **item1**. Herhaal de stappen om een tweede item **item2** toe te voegen en druk daarna op toevoegen.
+
+Wanneer je je browser venster weer bekijkt zou je je nieuw toegevoegde items nu moeten zien.
+
+# Bootstrap toevoegen
+Om een iets prettiger uitziende applicatie te krijgen voegen we bootstrap toe aan ons project met de volgende regel in het **head** gedeelte van **src/index.html**:
+``` html
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+```
+Daarnaast zetten we een div met de class **container** om onze lijst heen in **src/app/app.component.html**:
+``` html
+<div class=”container”>
+</div>
+```
+
+# Datamodel
+Omdat de data als JSON opgeslagen wordt kunnen geen gebruik maken van tabellen. Hoe gaan we onze database inrichten?
+We kunnen ervoor kiezen om groepen op te slaan met daarin genest onze contacten:
