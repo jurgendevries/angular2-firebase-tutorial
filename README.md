@@ -55,12 +55,21 @@ Hierna het volgende commando om een nieuw Angular2 project aan te maken en de pr
 ng new <project-name>
 ```
 Wanneer je commando venster uitgeraasd is, heb je een nieuwe folder met alle benodigdheden (Dit kan even duren). Ga naar deze folder toe met het commando:
+```sh
 cd <project-name>
+```
 Om te testen of alles tot zover werkt het volgende commando:
+
+```sh
 ng serve
-Als het commando venster klaar is ga je naar http://localhost:4200. Als het goed is zie je hier de tekst ‘App works!’ staan. Als dit niet het geval is of je hebt rood gekleurde meldingen in je commando venster staan, kijk dan in het hoofdstuk Troubleshooting of daar een oplossing voor je probleem staat.
+```
+Als het commando venster klaar is ga je naar [http://localhost:4200](http://localhost:4200). Als het goed is zie je hier de tekst ‘App works!’ staan. Als dit niet het geval is of je hebt rood gekleurde meldingen in je commando venster staan, kijk dan in het hoofdstuk Troubleshooting of daar een oplossing voor je probleem staat.
+
 Zolang je je commando venster laat draaien zal met elke wijziging in je bestanden automatisch je project opnieuw gebouwd worden en je browser venster herladen worden.
-Angularfire2 en Firebase installeren
+
+# Angularfire2 en Firebase installeren
 Om te kunnen communiceren met ons Firebase project gaan we 2 libraries via NPM toevoegen die ons hierbij zullen helpen. Draait de applicatie nog? Stop deze dan eerst in het windows command venster door CTRL+c te typen en type vervolgens J en enter om te bevestigen. Installeer vervolgens de dependencies via het volgende commando:
+```sh
 npm install angularfire2 firebase --save
+```
 Wanneer de dependencies geïnstalleerd zijn ga je in een IDE naar src/app/app.module.ts. Zoek je bewaarde Firebase webapp configuratie er weer bij en voeg Firebase op de volgende manier toe:
