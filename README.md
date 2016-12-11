@@ -72,4 +72,29 @@ Om te kunnen communiceren met ons Firebase project gaan we 2 libraries via NPM t
 ```sh
 npm install angularfire2 firebase --save
 ```
-Wanneer de dependencies geïnstalleerd zijn ga je in een IDE naar src/app/app.module.ts. Zoek je bewaarde Firebase webapp configuratie er weer bij en voeg Firebase op de volgende manier toe:
+Wanneer de dependencies geïnstalleerd zijn ga je in een IDE naar <strong>src/app/app.module.ts</strong>. Zoek je bewaarde Firebase webapp configuratie er weer bij en voeg Firebase op de volgende manier toe:
+```diff
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
++ import { AngularFireModule } from 'angularfire2';
+import { AppComponent } from './app.component';
++ export const firebaseConfig = {
++  apiKey: '<your-key>',
++  authDomain: '<your-project-authdomain>',
++  databaseURL: '<your-database-URL>',
++  storageBucket: '<your-storage-bucket>'
++ };
+@NgModule({
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,
++    AngularFireModule.initializeApp(firebaseConfig)
+  ],
+  declarations: [ AppComponent ],
+  bootstrap: [ AppComponent ]
+})
+export class AppModule {}
+```
