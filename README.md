@@ -5,7 +5,7 @@ Wat niet wordt behandeld in dit blog zijn de volgende onderwerpen:
 *	Unit testen van de applicatie
 *	Modulariseren van de applicatie
 *	Complete uitleg hoe een Angular project te starten, we maken gebruik van de Angular-CLI om snel aan de slag te kunnen
-*	User authentication
+*	User authentication met Firebase
 
 # Code
 In deze tutorial wordt de code in blokken getoond. Hierin wordt voor de TypeScript en html code getoond wat er wordt toegevoegd aan de code of verwijderd. Dat ziet er als volgt uit:
@@ -13,6 +13,7 @@ In deze tutorial wordt de code in blokken getoond. Hierin wordt voor de TypeScri
 ``` diff
 + deze regel wordt toegevoegd
 - en deze verwijderd
++ en deze is gewijzigd
 en deze blijft staan
 ```
 
@@ -294,7 +295,7 @@ Om de functie waar de knop naar verwijst te kunnen realiseren moeten we eerst ee
 * In de ngOnInit functie die we van de component generator cadeau hebben gekregen zorgen we dat de groepen aan de eerder gedefinieerde FirebaseListObservable worden gekoppeld
   * Het ‘/groepen’ endpoint bestaat nog niet in Firebase, maar zal automatisch aangemaakt worden zodra we hier iets naar toe schrijven.
 * Dan de functie om een groep toe te voegen
-En dan ziet er dan als volgt uit:
+En dat ziet er dan als volgt uit:
 ``` diff
 import { Component, OnInit } from '@angular/core';
 + import { AngularFire, FirebaseListObservable } from 'angularfire2';
@@ -321,7 +322,7 @@ export class GroepComponent implements OnInit {
 +          console.log(error);
 +        });
 +    }    
-=  }
++  }
 
   ngOnInit() {
 +    this.groepen = this.af.database.list('/groepen');
@@ -452,13 +453,30 @@ export class Groep {
 };
 ```
 Het lijkt wat overdreven om voor een groep met alleen maar een titel van het type string een model aan te maken. Toch denk ik dat het goed is om je zelf aan te leren dit altijd wel te doen. Wanneer je bijvoorbeeld user authentication aan deze applicatie toe zou voegen wil je een user ID per groep opslaan zodat je weet welke groepen bij welke user horen. Misschien moeten users meerdere adresboeken aan kunnen maken en dan wil je per groep een adresboek ID opslaan.
-Om gebruik te maken van dit model voegen we het eerst aan het groep component toe. Begin met het importeren van het groep model in **src/groep/groep.component.ts**:
-import { Groep } from './groep.model';
-Vervolgens gebruiken we het model om een nieuwe groep aan te maken en door te geven aan Firebase in de groepToevoegen methode:
-groepToevoegen(formData: any): void {
+Om gebruik te maken van dit model voegen we het eerst aan het groep component toe. 
+* Begin met het importeren van het groep model in **src/groep/groep.component.ts**
+* Vervolgens gebruiken we het model om een nieuwe groep aan te maken en door te geven aan Firebase in de groepToevoegen methode
+``` diff
+import { Component, OnInit } from '@angular/core';
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
+
++ import { Groep } from './groep.model';
+
+@Component({
+  selector: 'app-groep',
+  templateUrl: './groep.component.html',
+  styleUrls: ['./groep.component.css']
+})
+export class GroepComponent implements OnInit {
+  groepen: FirebaseListObservable<any[]>;
+  constructor(
+    private af: AngularFire
+  ) {}
+
+  groepToevoegen(formData: any): void {
     if (formData.valid) {
-      this.groepen.push(new Groep(formData.value.titel))
-       .then(response => {
++      this.groepen.push(new Groep(formData.value.titel))
+        .then(response => {
           console.log("Groep toegevoegd!");
           formData.reset();
         })
@@ -466,6 +484,13 @@ groepToevoegen(formData: any): void {
           console.log(error);
         });
     }    
+  }
+
+  ngOnInit() {
+    this.groepen = this.af.database.list('/groepen');
+  }
+
 }
+```
 Probeer je nu nog een element mee te geven in bij het aanmaken van de groep, of een titel die geen string is, dan krijg je hier een foutmelding van in je commando venster (of je IDE/editor als deze TypeScript ondersteuning heeft).
 
