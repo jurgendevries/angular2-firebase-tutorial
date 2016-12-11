@@ -73,7 +73,7 @@ Om te kunnen communiceren met ons Firebase project gaan we 2 libraries via NPM t
 npm install angularfire2 firebase --save
 ```
 Wanneer de dependencies geïnstalleerd zijn ga je in een IDE naar <strong>src/app/app.module.ts</strong>. Zoek je bewaarde Firebase webapp configuratie er weer bij en voeg Firebase op de volgende manier toe:
-``` typescript diff
+``` diff
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
