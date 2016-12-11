@@ -156,13 +156,13 @@ export class AppComponent {
   }
 }
 ```
-En **src/app/app.component.html** naar:
-``` diff
-+<ul>
-+  <li class="text" *ngFor="let item of items | async">
-+    {{item.value}}
-+  </li>
-+</ul>
+En vervang de code in **src/app/app.component.html** voor:
+``` html
+<ul>
+  <li class="text" *ngFor="let item of items | async">
+    {{item.value}}
+  </li>
+</ul>
 ```
 Omdat er nog geen data in Firebase staat, gaan we deze direct in Firebase toevoegen. Via het dashboard ga je in het linker menu naar database. Via het plusje op het hoofd element kun je makkelijk data toevoegen.
 Geef de naam **items** op en laat het waarde veld leeg. Klik op het plusje van het nieuwe element en geef hier de naam **item1** aan. Laat ook hier het waarde veld leeg en klik op het plusje van dit element. In het nieuwe element geef je als naam **value** op en in het waarde veld zet je **item1**. Herhaal de stappen om een tweede item **item2** toe te voegen en druk daarna op toevoegen.
@@ -186,7 +186,7 @@ We kunnen ervoor kiezen om groepen op te slaan met daarin genest onze contacten:
 *	Groepen
   *	–KT_uwF2FH23j
     *	NAME: Groep1
-      *	CONTACTEN: Contacten
+      *	Contacten
         *	–KT_xvfDFm2mk
           *	NAME: Contact1
         *	–KT_xvfDFm2mk
@@ -197,7 +197,7 @@ We kunnen ervoor kiezen om groepen op te slaan met daarin genest onze contacten:
           *	NAME: Contact1
   *	–KT_uwF3FH23j
     *	NAME: Groep2
-      *	CONTACTEN: Contacten
+      *	Contacten
         *	–KT_xvfDFm2mk
           *	NAME: Contact1
         *	–KT_xvfDFm3mk
@@ -209,4 +209,119 @@ We kunnen ervoor kiezen om groepen op te slaan met daarin genest onze contacten:
 
 Voor de app die we gaan maken zal de hoeveelheid data niet wereldschokkend groot zijn. Maar wanneer je een project begint met serieuze hoeveelheden data, is dit geen goed idee. Firebase moet om alleen een lijstje groepen binnen te halen ook alles binnenhalen wat er onder die groepen hangt. Naarmate de hoeveelheid data toeneemt gaat dit performance problemen opleveren.
 Hoe gaan we dan wel onze data opslaan, we kunnen immers geen tabellen aanmaken zoals een SQL-database. Gelukkig slaat Firebase elk item voor ons op met uniek ID. Laten we eens kijken of we daar een beter datamodel mee kunnen maken:
+* Groepen
+  * -KT_uwF2FH23j
+    * NAME: Groep1
+  * –KT_uwF3FH23j
+    * NAME:  Groep2
+  * –KT_uwF4FH23j
+    * NAME:  Groep3
+  * –KT_uwF5FH23j
+    * NAME:  Groep4
+*	Contacten
+  * –KT_xvfDFm2mk
+    * GRP_ID: –KT_uwF2FH23j
+    * NAME:  Contact1
+  * –KT_xvfDFm2mk
+    * GRP_ID: –KT_uwF3FH23j
+    * NAME:  Contact1
+  * –KT_xvfDFm2mk
+    * GRP_ID: –KT_uwF4FH23j
+    * NAME:  Contact1
+  * –KT_xvfDFm2mk
+    * GRP_ID: –KT_uwF5FH23j
+    * NAME:  Contact1
+  * –KT_xvfDFm2mk 
+    * GRP_ID: –KT_uwF2FH23j
+    * NAME:  Contact1
 
+Dit lijkt sterk op hoe je in een SQL-database gebruik maakt van foreign keys en zo gaan we dat dus ook in Firebase aanpakken. Op deze manier kunnen we een lijst met groepen tonen zonder de contacten ook meteen op te halen. En op basis van een groep ID kunnen we met een query de contacten uit een groep ophalen. Nu we onze installatie klaar hebben en het datamodel duidelijk is gaan we daadwerkelijk beginnen met onze webapp.
+
+Wanneer er echt grote hoeveelheden data aanwezig zijn zou je niet door alle contacten heen willen zoeken naar die contacten die in de geselecteerde groep zitten. Hiervoor zou je nog een extra node aan kunnen in de database waarin een lijst met groepen en de bijbehorende contact id’s zijn opgeslagen. Dat doen we in dit geval niet.
+
+Om deze structuur te krijgen hoeven we zelf niks te doen in Firebase. Zodra we data proberen toe te voegen aan een pad dat nog niet bestaat in Firebase, maakt Firebase dit zelf aan. We moeten de data alleen op de juiste manier naar Firebase toe sturen.
+
+# Component
+Voor het groepen overzicht van de applicatie maken we een apart component aan. We willen de code graag overzichtelijk houden en elk component zijn eigen taak geven. Op deze manier worden het ook echt componenten van de applicatie.
+Het groep component gaan we op de makkelijke manier toevoegen via de Angular-CLI met het volgende commando:
+```sh
+ng g component groep
+```
+De **g** staat voor **generate**, dit kan ook gebruikt worden maar de **g** is korter. Met dit commando wordt niet alleen de map ‘groep’ met daarin de component onderdelen toegevoegd, maar ook wordt het nieuwe component automatisch aan je **src/app/app.module.ts** toegevoegd waarmee het component beschikbaar wordt gesteld voor de applicatie. Voor de contacten maken we straks met de hand een component aan en zullen we deze stappen zelf uit moeten voeren.
+
+# Data toevoegen aan Firebase vanaf de applicatie
+Met het groep component gaan we aan de slag om groepen toe te kunnen voegen in Firebase en vervolgens deze groepen te tonen op het scherm.
+Om data in te kunnen voeren maken gebruik van een html formulier dat we aan Angular gaan koppelen met de functionaliteiten van FormsModule, deze is gekoppeld aan de applicatie in app.module.ts en wordt automatisch meegeleverd bij het aanmaken van een nieuw project met de AngularCLI.
+Het formulier gaan we opmaken in **src/groep/groep.component.html**:
+``` html
+<form #formData='ngForm'>
+  <div class="form-group">
+    <input type="text" class=”form-control” (ngModel)="text" placeholder="Groep titel" id="titel" name="titel" rows="10" required/>
+  </div>
+  <button [disabled]="!formData.valid" (click)="groepToevoegen(formData)" class="btn btn-primary">Opslaan</button>
+</form>
+<ul>
+  <li *ngFor="let groep of groepen | async">
+    {{ groep.titel }}
+  </li>
+</ul>
+```
+Je ziet dat er een form element met het attribuut **#formData="ngForm"** gebruikt wordt, dit is eigenlijk een verkorte manier om een formulier aan te maken zonder deze in je componentclass te definiëren.  De langere notatie hiervan zou als volgt zijn:
+``` html
+<form [ngFormModel]="myForm">
+```
+En in het component zou dan de volgende code opgenomen moeten worden om het geheel werkend te krijgen:
+``` typescript
+this.myForm = formBuilder.group({
+  'subject': '',
+  'message': ''
+})
+```
+Voor onze applicatie gebruiken we de verkorte versie.
+
+Er is één inputveld om een groep titel op te geven door deze een **name** en een **(ngModel)** te geven met de waarde **titel** kunnen we deze waarde in de componentclass straks weer opvragen.
+In de knop waarmee we het formulier op gaan slaan staan twee belangrijke attributen: **[disabled]** en **(click)**. Een voordeel van de FormsModule gebruiken is dat je makkelijk formulieren kunt valideren. Omdat ons input veld het attribuut required heeft moet hier eerst wat ingevoerd worden voordat de formData de status valid krijgt. Zolang dit niet het geval is blijft de knop disabled en onbruikbaar. Het **(click)** attribuut koppelt de knop aan een functie in onze componentclass (deze moeten we nog aanmaken). Aan deze functie geven we de formData mee zodat deze beschikbaar gesteld wordt in de functie.
+Als laatste tonen we de groepen die zijn toegevoegd aan Firebase in een lijstje met titels onder het formulier.
+Om de functie waar de knop naar verwijst te kunnen realiseren moeten we eerst een aantal stappen nemen.
+* Firebase en FirebaseListObservable importeren in **src/groep/groep.component.ts**
+* In het groep component maken we een FirebaseListObservable aan direct na de class definitie
+* In de constructor definiëren we AngularFire zodat deze beschikbaar is
+* In de ngOnInit functie die we van de component generator cadeau hebben gekregen zorgen we dat de groepen aan de eerder gedefinieerde FirebaseListObservable worden gekoppeld
+  * Het ‘/groepen’ endpoint bestaat nog niet in Firebase, maar zal automatisch aangemaakt worden zodra we hier iets naar toe schrijven.
+* Dan de functie om een groep toe te voegen
+En dan ziet er dan als volgt uit:
+``` diff
+import { Component, OnInit } from '@angular/core';
++import { AngularFire, FirebaseListObservable } from 'angularfire2';
+
+@Component({
+  selector: 'app-groep',
+  templateUrl: './groep.component.html',
+  styleUrls: ['./groep.component.css']
+})
+export class GroepComponent implements OnInit {
++  groepen: FirebaseListObservable<any[]>;
+  constructor(
++    private af: AngularFire
+  ) {}
+
++  groepToevoegen(formData: any): void {
++    if (formData.valid) {
++      this.groepen.push({titel: formData.value.titel})
++        .then(response => {
++          console.log("Groep toegevoegd!");
++          formData.reset();
++        })
++        .catch(error => {
++          console.log(error);
++        });
++    }    
+=  }
+
+  ngOnInit() {
++    this.groepen = this.af.database.list('/groepen');
+  }
+
+}
+
+De formData krijgen we vanuit het formulier meegestuurd, wanneer iemand deze functie toch probeert aan te roepen zonder dat de data valide is, gebeurt er nog niks. Wanneer de data wel valide is wordt er een object toegevoegd aan het FirebaseListObject.  Het pushen van een object naar een FirebaseListObservable geeft een promise terug. Met de then methode vangen we een succesvolle response op en met de catch methode eventuele fouten en loggen deze in de console. Met de titel property wordt de lijst met groepen vervolgens weer op het scherm getoond.
