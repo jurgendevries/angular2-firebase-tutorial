@@ -7,6 +7,24 @@ Wat niet wordt behandeld in dit blog zijn de volgende onderwerpen:
 *	Complete uitleg hoe een Angular project te starten, we maken gebruik van de Angular-CLI om snel aan de slag te kunnen
 *	User authentication
 
+# Code
+In deze tutorial wordt de code in blokken getoond. Hierin wordt voor de TypeScript en html code getoond wat er wordt toegevoegd aan de code of verwijderd. Dat ziet er als volgt uit:
+
+``` diff
++ deze regel wordt toegevoegd
+- en deze verwijderd
+en deze blijft staan
+```
+
+De **+** en **-** tekens horen niet bij de code.
+
+Wordt de code compleet vervangen in een bestand of is alle code nieuw dan wordt de volledige code getoond:
+``` html
+<div class="container">
+  container
+</div>
+```
+
 # Firebase account/project aanmaken en instellen
 Ga naar [https://firebase.google.com/](https://firebase.google.com/ "Firebase")
 
