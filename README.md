@@ -23,6 +23,44 @@ Aangezien we in dit blog geen Authenticatie gaan behandelen gaan we de rechten v
 }
 ```
 
-```typescript
-import {test} from 'test.test';
+Nu zijn de gegevens publiekelijk toegankelijk. Gebruik deze instellingen dus niet wanneer je (bedrijfs) gevoelige data wil opslaan.
+
+Wanneer je in het topmenu teruggaat naar <strong>Data</strong>, zie je de url van je database:
+[https://NAAM-PROJECT.firebaseio.com/](https://NAAM-PROJECT.firebaseio.com/ "Firebase project link")
+
+Aangezien er nog geen data ingevoerd is zie je hier verder niks.
+
+Om Firebase straks aan onze applicatie te kunnen koppelen hebben we een aantal gegevens nodig. Door in het linkermenu op ‘Overview’ te klikken kom je weer terug op het project overzicht. Klik hier op ‘Firebase toevoegen aan uw webapp’.
+
+Kopieer het JSON-object wat getoond wordt en bewaar deze, we zullen de gegevens straks nodig hebben.
+
+# Angular2 Installeren
+De snelste manier om aan de slag te kunnen met Angular2 en Firebase is door gebruik te maken van Angular-CLI.
+
+Om Angular-CLI te installeren heb je NodeJS en NPM nodig. Voor AngularFire2 heb je minimaal Angular-CLI versie 1.0.0-beta.14 nodig. Om deze versie te kunnen installeren ga je naar [https://nodejs.org/en/](https://nodejs.org/en/ "NodeJS") toe en download je de installer voor de laatste stabiele versie (op dit moment 6.9.2). Hierbij krijg je automatisch de bijbehorende NPM versie geïnstalleerd.
+
+Wanneer je NodeJS en NPM geïnstalleerd hebt kun je Angular CLI installeren. Ga naar de folder waar je je webapp wilt ontwikkelen. Met het volgende commando in Windows Command venster wordt Angular-CLI geïnstalleerd:
+```sh
+npm install -g angular-cli@latest
+npm install -g typings 
+npm install -g typescript
 ```
+
+@latest zorgt ervoor dat je de nieuwste versie van Angular-CLI installeert.
+-g zorgt ervoor dat Angular-CLI globaal beschikbaar wordt gesteld.
+Naast Angular-CLI installeren we ook typings en typescript om gebruik te kunnen maken van TypeScript.
+
+Hierna het volgende commando om een nieuw Angular2 project aan te maken en de project folder in te gaan.
+```sh
+ng new <project-name>
+```
+Wanneer je commando venster uitgeraasd is, heb je een nieuwe folder met alle benodigdheden (Dit kan even duren). Ga naar deze folder toe met het commando:
+cd <project-name>
+Om te testen of alles tot zover werkt het volgende commando:
+ng serve
+Als het commando venster klaar is ga je naar http://localhost:4200. Als het goed is zie je hier de tekst ‘App works!’ staan. Als dit niet het geval is of je hebt rood gekleurde meldingen in je commando venster staan, kijk dan in het hoofdstuk Troubleshooting of daar een oplossing voor je probleem staat.
+Zolang je je commando venster laat draaien zal met elke wijziging in je bestanden automatisch je project opnieuw gebouwd worden en je browser venster herladen worden.
+Angularfire2 en Firebase installeren
+Om te kunnen communiceren met ons Firebase project gaan we 2 libraries via NPM toevoegen die ons hierbij zullen helpen. Draait de applicatie nog? Stop deze dan eerst in het windows command venster door CTRL+c te typen en type vervolgens J en enter om te bevestigen. Installeer vervolgens de dependencies via het volgende commando:
+npm install angularfire2 firebase --save
+Wanneer de dependencies geïnstalleerd zijn ga je in een IDE naar src/app/app.module.ts. Zoek je bewaarde Firebase webapp configuratie er weer bij en voeg Firebase op de volgende manier toe:
