@@ -499,3 +499,93 @@ export class GroepComponent implements OnInit {
 ```
 Probeer je nu nog een element mee te geven in bij het aanmaken van de groep, of een titel die geen string is, dan krijg je hier een foutmelding van in je commando venster (of je IDE/editor als deze TypeScript ondersteuning heeft).
 
+# Service
+We hebben de communicatie met Firebase nu verwerkt in het groep component. Mochten we ooit Firebase in willen ruilen voor een andere backend dan moeten we in het component de communicatie gaan aanpassen. Het is beter om deze communicatie via een service te laten lopen om op die manier de communicatie met de backend gescheiden te houden van het component zelf.
+Maak in het bestand **src/groep/groep.service.ts** aan.
+Importeer de nodige modules uit Angular, Firebase en het groep model:
+``` typescript
+import { Injectable } from '@angular/core';
+import { AngularFire, FirebaseListObservable  } from 'angularfire2';
+import { Groep } from './groep.model';
+```
+De functie om een groep toe te voegen aan Firebase zou hier terrecht moet komen. Daarnaast moeten we AngularFire instantieren en een FirebaseListObservable aanmaken die de groepen ophaalt en bijhoudt. Voor het ophalen van de groepen maken we nog een functie aan die we aan kunnen roepen vanuit het groep component om daar de groepen beschikbaar te stellen. Dat ziet er als volgt uit:
+
+``` diff
+import { Injectable } from '@angular/core';
+import { AngularFire, FirebaseListObservable  } from 'angularfire2';
+import { Groep } from './groep.model';
+
++ @Injectable()
++ export class GroepService {
++    private groepen: FirebaseListObservable<any[]>;
++    constructor(
++        private af: AngularFire
++    ) {
++        this.groepen = af.database.list('/groepen');
++    }
++    groepToevoegen(groep: Groep): void {
++        this.groepen.push(groep)
++        .then(response => {
++          console.log("Groep toegevoegd!");
++        })
++        .catch(error => {
++          console.log(error);
++        });
++    }
++    getGroepen(): FirebaseListObservable<any[]> {
++        return this.groepen;
++    }
++}
+```
+Om gebruik te kunnen maken van groep service moet deze eerst toegevoegd worden aan het groep component en aan de app.module.ts.
+* Importeer de service in app.module.ts
+* Voeg deze vervolgens aan de providers array toe om de service beschikbaar te stellen voor de hele module
+*
+``` diff
++ import { GroepService } from './groep/groep.service';
++ providers: [ GroepService ]
+```
+
+Om de groep service vervolgens te gebruiken in het groep component:
+* Importeren we ook daar de groep service
+* In de constructor voegen de service toe
+* En in de ngOnInit functie passen aan dat de groepen niet nogmaals opgehaald worden maar via de groep service
+* En als laatste vervangen we de groepToevoegen functie
+
+``` diff
+import { Component, OnInit } from '@angular/core';
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
+
+import { Groep } from './groep.model';
++ import { GroepService } from './groep.service';
+
+@Component({
+  selector: 'app-groep',
+  templateUrl: './groep.component.html',
+  styleUrls: ['./groep.component.css']
+})
+export class GroepComponent implements OnInit {
+  groepen: FirebaseListObservable<any[]>;
+  constructor(
+    private af: AngularFire,
++    private groepService: GroepService
+  ) {}
+
++  groepToevoegen(formData: any): void {
++    if (formData.valid) {
++      let groep: Groep = new Groep(formData.value.titel);
++      this.groepService.groepToevoegen(groep);
++      formData.reset();
++    }    
++  }
+
+  ngOnInit() {
++    this.groepen = this.groepService.getGroepen();
+  }
+
+}
+```
+Met deze vernieuwde code maken we nu een nieuwe groep aan en geven deze vervolgens door aan de groepService waar alles verder afgehandeld wordt.
+
+Aan de voorkant is verschil te zien, maar de code is onderhoudbaarder en we kunnen niet meer iets anders dan een groep meegeven aan de groepToevoegen functie. Doen we dit wel dan worden we hier in een vroegtijdig stadium al op gewezen.
+
