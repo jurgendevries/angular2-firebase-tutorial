@@ -268,7 +268,7 @@ De **g** staat voor **generate**, dit kan ook gebruikt worden maar de **g** is k
 # Data toevoegen aan Firebase vanaf de applicatie
 Met het groep component gaan we aan de slag om groepen toe te kunnen voegen in Firebase en vervolgens deze groepen te tonen op het scherm.
 Om data in te kunnen voeren maken gebruik van een html formulier dat we aan Angular gaan koppelen met de functionaliteiten van FormsModule, deze is gekoppeld aan de applicatie in app.module.ts en wordt automatisch meegeleverd bij het aanmaken van een nieuw project met de AngularCLI.
-Het formulier gaan we opmaken in **src/groep/groep.component.html**:
+Het formulier gaan we opmaken in **src/app/groep/groep.component.html**:
 ``` html
 <form #formData='ngForm'>
   <div class="form-group">
@@ -296,10 +296,12 @@ this.myForm = formBuilder.group({
 Voor onze applicatie gebruiken we de verkorte versie.
 
 Er is één inputveld om een groep titel op te geven door deze een **name** en een **(ngModel)** te geven met de waarde **titel** kunnen we deze waarde in de componentclass straks weer opvragen.
+
 In de knop waarmee we het formulier op gaan slaan staan twee belangrijke attributen: **[disabled]** en **(click)**. Een voordeel van de FormsModule gebruiken is dat je makkelijk formulieren kunt valideren. Omdat ons input veld het attribuut required heeft moet hier eerst wat ingevoerd worden voordat de formData de status valid krijgt. Zolang dit niet het geval is blijft de knop disabled en onbruikbaar. Het **(click)** attribuut koppelt de knop aan een functie in onze componentclass (deze moeten we nog aanmaken). Aan deze functie geven we de formData mee zodat deze beschikbaar gesteld wordt in de functie.
+
 Als laatste tonen we de groepen die zijn toegevoegd aan Firebase in een lijstje met titels onder het formulier.
 Om de functie waar de knop naar verwijst te kunnen realiseren moeten we eerst een aantal stappen nemen.
-* Firebase en FirebaseListObservable importeren in **src/groep/groep.component.ts**
+* Firebase en FirebaseListObservable importeren in **src/app/groep/groep.component.ts**
 * In het groep component maken we een FirebaseListObservable aan direct na de class definitie
 * In de constructor definiëren we AngularFire zodat deze beschikbaar is
 * In de ngOnInit functie die we van de component generator cadeau hebben gekregen zorgen we dat de groepen aan de eerder gedefinieerde FirebaseListObservable worden gekoppeld
@@ -366,6 +368,7 @@ import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { GroepComponent } from './groep/groep.component';
+
 const appRoutes: Routes = [
     {
         path: 'groepen',
@@ -454,7 +457,7 @@ Verwijder vervolgens ook de items array via het Firebase Data Dashboard, deze he
 Door het gebruik van TypeScript hebben we de mogelijkheid om types mee te geven aan variabelen en parameters in functies. Wanneer je een functie definieert die een integer verwacht om mee te rekenen, maar je roept die functie per ongeluk aan met een string krijg je natuurlijk onverwachte uitkomsten. Door types mee te geven aan je functie parameters krijg je van je IDE/Editor al meldingen dat je verkeerde type parameters meegeeft in je functie aanroep. Hierdoor wordt je eerder op je fouten gewezen en dit scheelt je later een hoop debuggen.
 
 Het zou dan ook mooi zijn om de functies in het groep component een parameter van het type groep mee te geven.
-Maak in de groep folder een nieuwe bestand aan met de naam **src/groep/groep.model.ts**:
+Maak in de groep folder een nieuwe bestand aan met de naam **src/app/groep/groep.model.ts**:
 ``` typescript
 export class Groep {
     constructor(
@@ -464,7 +467,7 @@ export class Groep {
 ```
 Het lijkt wat overdreven om voor een groep met alleen maar een titel van het type string een model aan te maken. Toch denk ik dat het goed is om je zelf aan te leren dit altijd wel te doen. Wanneer je bijvoorbeeld user authentication aan deze applicatie toe zou voegen wil je een user ID per groep opslaan zodat je weet welke groepen bij welke user horen. Misschien moeten users meerdere adresboeken aan kunnen maken en dan wil je per groep een adresboek ID opslaan.
 Om gebruik te maken van dit model voegen we het eerst aan het groep component toe. 
-* Begin met het importeren van het groep model in **src/groep/groep.component.ts**
+* Begin met het importeren van het groep model in **src/app/groep/groep.component.ts**
 * Vervolgens gebruiken we het model om een nieuwe groep aan te maken en door te geven aan Firebase in de groepToevoegen methode
 ``` diff
 import { Component, OnInit } from '@angular/core';
@@ -506,7 +509,7 @@ Probeer je nu nog een element mee te geven in bij het aanmaken van de groep, of 
 
 # Service
 We hebben de communicatie met Firebase nu verwerkt in het groep component. Mochten we ooit Firebase in willen ruilen voor een andere backend dan moeten we in het component de communicatie gaan aanpassen. Het is beter om deze communicatie via een service te laten lopen om op die manier de communicatie met de backend gescheiden te houden van het component zelf.
-Maak in het bestand **src/groep/groep.service.ts** aan.
+Maak in het bestand **src/app/groep/groep.service.ts** aan.
 Importeer de nodige modules uit Angular, Firebase en het groep model:
 ``` typescript
 import { Injectable } from '@angular/core';
@@ -543,7 +546,7 @@ import { Groep } from './groep.model';
 +}
 ```
 Om gebruik te kunnen maken van groep service moet deze eerst toegevoegd worden aan het groep component en aan de app.module.ts.
-* Importeer de service in app.module.ts
+* Importeer de service in **src/app/app.module.ts**
 * Voeg deze vervolgens aan de providers array toe om de service beschikbaar te stellen voor de hele module
 ``` diff
 import { BrowserModule } from '@angular/platform-browser';
@@ -551,6 +554,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
+
 import { routing } from './app.routing';
 import { AppComponent } from './app.component';
 import { GroepComponent } from './groep/groep.component';
@@ -574,7 +578,10 @@ export const firebaseConfig = {
 +  providers: [
 +    GroepService
 +  ],
-  declarations: [ AppComponent, GroepComponent ],
+  declarations: [ 
+    AppComponent, 
+    GroepComponent 
+  ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule {}
@@ -623,3 +630,381 @@ Met deze vernieuwde code maken we nu een nieuwe groep aan en geven deze vervolge
 
 Aan de voorkant is verschil te zien, maar de code is beter onderhoudbaar en we kunnen niet meer iets anders dan een groep meegeven aan de groepToevoegen functie. Doen we dit wel dan worden we hier in een vroegtijdig stadium al op gewezen.
 
+# Contacten
+Zoals eerder aangegeven gaan we het contact component niet genereren maar zelf aanmaken. We beginnen met het aanmaken van een model voor de contacten. Maak een nieuwe map aan genaamd **src/app/contact**. En een nieuw bestand toe **src/app/contact/contact.model.ts** met de volgende inhoud:
+``` typescript
+export class Contact {
+    constructor(
+        public groepId: string,
+        public naam: string,
+        public adres: string,
+        public tel: string
+    ) {}
+};
+```
+Vervolgens maken we een service aan waarin we contacten op kunnen halen per groep en contacten kunnen opslaan. Maak een nieuw bestand **src/app/contact/contact.service.ts** aan in de folder contact met de volgende inhoud:
+``` typescript
+import { Injectable } from '@angular/core';
+import { AngularFire, FirebaseListObservable  } from 'angularfire2';
+
+import { Contact } from './contact.model';
+
+@Injectable()
+export class ContactService {
+    private contacten: FirebaseListObservable<any[]>;
+    constructor(
+        private af: AngularFire
+    ) {
+        this.contacten = af.database.list('/contacten');
+    }
+
+    contactToevoegen(contact: Contact): void {
+        this.contacten.push(contact)
+        .then(response => {
+          console.log("Groep toegevoegd!");
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+
+    getContacten(): FirebaseListObservable<any[]> {
+        return this.contacten;
+    }
+}
+```
+Om het contact component aan te maken kopieëren we de code van het groep component en veranderen overal het woord groep(en) in contact(en). Dat geeft ons de volgende code in **src/app/contact/contact.component.ts**:
+``` typescript
+import { Component, OnInit } from '@angular/core';
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
+
+import { Contact } from './contact.model';
+import { ContactService } from './contact.service'; 
+
+@Component({
+  selector: 'app-contact',
+  templateUrl: './contact.component.html',
+  styleUrls: ['./contact.component.css']
+})
+
+export class ContactComponent implements OnInit {
+  contacten: FirebaseListObservable<any[]>;
+  constructor(
+    private af: AngularFire,
+    private contactService: ContactService
+  ) {}
+  
+/*
+ contactToevoegen(formData: any): void {
+    if (formData.valid) {
+      let contact: Contact = new Contact(formData.value.titel);
+      this.contactService.contactToevoegen(contact);
+      formData.reset();
+    }    
+  }*/
+  
+  ngOnInit() {
+    this.contacten = this.contactService.getContacten();
+  }
+}
+```
+Zoals je ziet commentarieren we eerst de functie contactToevoegen uit. Deze zetten we later weer aan.
+Ok, we hebben nu een contact component, service en model maar hoe zijn deze contacten aan een groep gelinkt? Juist, op dit moment nog niet. Daarvoor hebben we een groepId nodig. Vanuit de groep route, waar het groep component geladen is, linken we de groepen elk naar een eigen pagina door. Deze link bouwen we op door het groepId te gebruiken zodat we deze beschikbaar krijgen in het contact component en zo de contacten uit een groep kunnen ophalen en contacten aan een groep kunnen toevoegen. Ga hiervoor naar het groep component en maak de volgende aanpassingen in **src/app/groep/groep.component.ts**:
+* Voeg de functie selecteerGroep toe
+* Importeer router
+* Voeg de router aan de constructor toe
+``` diff
+import { Component, OnInit } from '@angular/core';
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
++ import { Router } from '@angular/router';
+
+import { Groep } from './groep.model';
+import { GroepService } from './groep.service';
+
+@Component({
+  selector: 'app-groep',
+  templateUrl: './groep.component.html',
+  styleUrls: ['./groep.component.css']
+})
+export class GroepComponent implements OnInit {
+  groepen: FirebaseListObservable<any[]>;
+  constructor(
+    private af: AngularFire,
+    private groepService: GroepService,
++    private router: Router
+  ) {}
+
+  groepToevoegen(formData: any): void {
+    if (formData.valid) {
+      let groep: Groep = new Groep(formData.value.titel);
+      this.groepService.groepToevoegen(groep);
+      formData.reset();
+    }    
+  }
+
+
++  selecteerGroep(groepId: string): void {
++    this.router.navigate(['/groepen, groepId]);
++  }
+
+  ngOnInit() {
+    this.groepen = this.groepService.getGroepen();
+  }
+
+}
+```
+In het groep template gaan we vervolgens een toevoeging doen aan de groep titel om de selecteerGroep functie aan te roepen, **src/app/groep/groep.component.html**:
+``` diff
+<form #formData='ngForm'>
+  <div class="form-group">
+    <input type="text" class=”form-control” (ngModel)="text" placeholder="Groep titel" id="titel" name="titel" rows="10" required/>
+  </div>
+  <button [disabled]="!formData.valid" (click)="groepToevoegen(formData)" class="btn btn-primary">Opslaan</button>
+</form>
+<ul>
++  <li *ngFor="let groep of groepen | async" (click)="selecteerGroep(groep.$key)">
+    {{ groep.titel }}
+  </li>
+</ul>
+```
+Door het **(click)** attribuut wordt de selecteerGroep functie aangeroepen bij het aanklikken van de link. We geven **groep.$key** mee aan de functie, de $key is het ID van de groep zoals deze in Firebase opgeslagen is. Wanneer de functie selecteerGroep aangeroepen wordt, worden we doorverwezen naar de link ‘/groepen/GROEPID’. Hier hebben we nog geen route voor. Maak een nieuwe route aan in app.routing.ts en importeer het contact component:
+``` diff
+import { ModuleWithProviders } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { GroepComponent } from './groep/groep.component';
++ import { ContactComponent } from './contact/contact.component';
+
+const appRoutes: Routes = [
+    {
+        path: 'groepen',
+        component: GroepComponent
+    },
++    {
++        path: 'groepen/:id',
++        component: ContactComponent
++    },
+    {
+        path: '**',
+        redirectTo: '/groepen',
+        pathMatch: 'full'
+    }
+];
+
+export const routing: ModuleWithProviders = RouterModule.forRoot(appRoutes);
+```
+Door :id aan de route toe te voegen wordt het groepId beschikbaar als een route parameter. Deze kunnen we vervolgens in het contact component afvangen om daar mee de juiste contacten op te halen, **src/app/contact/contact.component.ts**: 
+* Voeg aan het contact component de benodigde imports toe
+* Voeg de router en activatedRoute toe aan de constructer van het contact component
+* Voeg vervolgens een component variabele toe direct na het openen van de ContactComponent class
+* En in de ngOnInit functie slaan we het groepId uit de url op in de zojuist aangemaakte variabale
+* In de getContacten functie kunnen we nu het groepId mee geven
+``` diff
+import { Component, OnInit } from '@angular/core';
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
++ import { Router, ActivatedRoute, Params } from '@angular/router';
+
+import { Contact } from './contact.model';
+import { ContactService } from './contact.service'; 
+
+@Component({
+  selector: 'app-contact',
+  templateUrl: './contact.component.html',
+  styleUrls: ['./contact.component.css']
+})
+
+export class ContactComponent implements OnInit {
+  contacten: FirebaseListObservable<any[]>;
++  groepId: string;
+
+  constructor(
+    private af: AngularFire,
+    private contactService: ContactService,
++    private route: ActivatedRoute,
++    private router: Router
+  ) {}
+  
+/*
+ contactToevoegen(formData: any): void {
+    if (formData.valid) {
+      let contact: Contact = new Contact(formData.value.titel);
+      this.contactService.contactToevoegen(contact);
+      formData.reset();
+    }    
+  }*/
+  
+  ngOnInit() {
++    this.route.params.forEach((params: Params) => {
++      let id = params['id'];
++      this.groepId = id;
++    });
++    this.contacten = this.contactService.getContacten(this.groepId);
+  }
+}
+```
+
+Als laatste moet we hiervoor nog de functie getContacten in de contact service aanpassen, het is namelijk niet meer de bedoeling om alle contacten binnen te halen, **src/app/contact/contact.service.ts**:
+``` diff
+import { Injectable } from '@angular/core';
+import { AngularFire, FirebaseListObservable  } from 'angularfire2';
+
+import { Contact } from './contact.model';
+
+@Injectable()
+export class ContactService {
+    private contacten: FirebaseListObservable<any[]>;
+    constructor(
+        private af: AngularFire
+    ) {
+        this.contacten = af.database.list('/contacten');
+    }
+
+    contactToevoegen(contact: Contact): void {
+        this.contacten.push(contact)
+        .then(response => {
+          console.log("Groep toegevoegd!");
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    }
+
++    getContacten(id: string): FirebaseListObservable<any[]> {
++        return this.af.database.list('/contacten', {
++            query: {
++                orderByChild: 'groepId',
++                equalTo: id 
++            }
++        });       
++    }
+}
+```
+Deze nieuwe functie geeft niet meer de eerder opgehaalde FirebaseListObservable met contacten door maar voert een query uit op contacten met het overeenkomende groepId.
+
+Om te kijken of alles werkt voegen we nu een template toe voor de contacten. Maak de bestanden **src/app/contact/contact.component.html** en **src/app/contact/contact.component.css** aan. Met deze laatste doen we niks maar we verwijzen er in het contact component wel naar (je kan er ook voor kiezen de verwijzing te verwijderen).
+Zet in **src/app/contact/contact.component.html** de volgende code:
+``` html
+<ul>
+  <li *ngFor="let contact of contacten | async">
+    {{ contact.naam }}<br/>
+    {{ contact.adres }}<br/>
+    {{ contact.tel }}
+  </li>
+</ul>
+```
+Om alles te laten werken moeten we nu alleen nog dit nieuwe component en de nieuwe service toevoegen aan **src/app/app.module.ts** 
+* Importeer het nieuwe component en de service:
+* Voeg het component vervolgens toe aan de declarations array en de service aan de providers array.
+``` diff
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { AngularFireModule } from 'angularfire2';
+
+import { routing } from './app.routing';
+import { AppComponent } from './app.component';
+import { GroepComponent } from './groep/groep.component';
+import { GroepService } from './groep/groep.service';
++ import { ContactComponent } from './contact/contact.component';
++ import { ContactService } from './contact/contact.service';
+
+// Must export the config
+export const firebaseConfig = {
+    apiKey: "AIzaSyD1LgKHv8s8-awyabqjYfG5y-1D7_fKn5I",
+    authDomain: "angularfirebase-276b0.firebaseapp.com",
+    databaseURL: "https://angularfirebase-276b0.firebaseio.com",
+    storageBucket: "angularfirebase-276b0.appspot.com",
+};
+@NgModule({
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    AngularFireModule.initializeApp(firebaseConfig),
+    routing
+  ],
+  providers: [
+    GroepService,
++    ContactService
+  ],
+  declarations: [ 
+    AppComponent, 
+    GroepComponent,
++    ContactComponent
+  ],
+  bootstrap: [ AppComponent ]
+})
+export class AppModule {}
+```
+
+
+Als je je commando venster nog hebt draaien ga je naar http://localhost:4200 heb je je commando venster niet meer draaien, ga dan naar je projectfolder en type ng serve om de applicatie weer te starten.
+En als het goed is zie je hier het overzicht van je groepen. Klik een groep aan en als het goed is kom je op een lege pagina terrecht. De link van deze pagina zal er als http://localhost:4200/groepen/-KXQw3F3TS-ex60A-zOO uit zien.
+Maar we zien hier nu natuurlijk nog geen contacten. Daarvoor voegen we een formulier op de pagina toe om contacten mee aan te maken. Ga daarvoor naar het bestand contact.component.ts en voeg de volgende code bovenaan het bestand toe:
+``` diff
++ <form #formData="ngForm">
++  <div class="form-group">
++    <input type="text" class="form-control" (ngModel)="naam" placeholder="Naam" id="naam" name="naam" rows="10" required/>
++  </div>
++  <div class="form-group">
++    <input type="text" class="form-control" (ngModel)="adres" placeholder="Adres" id="adres" name="adres" rows="10" required/>
++  </div>
++  <div class="form-group">
++    <input type="text" class="form-control" (ngModel)="tel" placeholder="Telefoonnummer" id="tel" name="tel" rows="10" required/>
++  </div>
++  <button [disabled]="!formData.valid" (click)="contactToevoegen(formData)" class="btn btn-primary">Opslaan</button>
++ </form>
+<ul>
+  <li *ngFor="let contact of contacten | async">
+    {{ contact.naam }}<br/>
+    {{ contact.adres }}<br/>
+    {{ contact.tel }}
+  </li>
+</ul>
+```
+Het principe is hetzelfde als het formulier om een groep aan te maken. We willen hier alleen meer velden vullen. Om de functie in het contact component af te ronden zetten we de functie contactToevoegen weer aan en passen deze als volgt aan, **src/app/contact/contact.component.ts**:
+``` diff
+import { Component, OnInit } from '@angular/core';
+import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+
+import { Contact } from './contact.model';
+import { ContactService } from './contact.service'; 
+
+@Component({
+  selector: 'app-contact',
+  templateUrl: './contact.component.html',
+  styleUrls: ['./contact.component.css']
+})
+
+export class ContactComponent implements OnInit {
+  contacten: FirebaseListObservable<any[]>;
+  groepId: string;
+
+  constructor(
+    private af: AngularFire,
+    private contactService: ContactService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
+  
++  contactToevoegen(formData: any): void {
++    if (formData.valid) {
++      let contact: Contact = new Contact(this.groepId, formData.value.naam, formData.value.adres, formData.value.tel);
++      this.contactService.contactToevoegen(contact);
++      formData.reset();
++    }    
++  }
+  
+  ngOnInit() {
+    this.route.params.forEach((params: Params) => {
+      let id = params['id'];
+      this.groepId = id;
+    });
+    this.contacten = this.contactService.getContacten(this.groepId);
+  }
+}
+```
+Wanneer je nu naar http://localhost:4200 gaat zou je als alles goed is gegaan nu contacten aan groepen toe kunnen voegen. En deze contacten zou je alleen onder de groep terug moeten zien waar je het contact hebt aangemaakt.
+We hebben nu een werkend adresboek. Ok, het is niet het mooiste adresboek maar de benodigde functionaliteit zit erin. 
