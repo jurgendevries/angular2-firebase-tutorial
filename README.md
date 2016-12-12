@@ -2,12 +2,11 @@
 
 In dit blog laat ik je zien hoe je met Angular2 en Firebase snel een prototype webapp neer kan zetten. Door gebruik te maken van Firebase hoef je je niet druk te maken over de backend van je webapp. Dit laten we door Firebase afhandelen. Het is zelfs mogelijk om Authenticatie en Hosting door Firebase te laten regelen. Dat wordt in dit blog niet behandeld. Wel gaan we een webapp maken waarin je contacten kan opslaan en groeperen. En deze webapp vervolgens op een gratis Heroku account deployen.
 Wat niet wordt behandeld in dit blog zijn de volgende onderwerpen:
+*	Complete uitleg Angular2 en hoe een Angular2 project te starten, we maken gebruik van de Angular-CLI om snel aan de slag te kunnen
+* Verschil tussen AngularJS en Angular2
 *	Unit testen van de applicatie
 *	Modulariseren van de applicatie
-*	Complete uitleg hoe een Angular2 project te starten, we maken gebruik van de Angular-CLI om snel aan de slag te kunnen
-* Complete uitleg Angular2
 *	User authentication met Firebase
-* Verschil tussen AngularJS en Angular2
 
 # Code
 In deze tutorial wordt de code in blokken getoond. Hierin wordt voor de TypeScript en html code getoond wat er wordt toegevoegd aan de code of verwijderd. Dat ziet er als volgt uit:
@@ -548,8 +547,38 @@ Om gebruik te kunnen maken van groep service moet deze eerst toegevoegd worden a
 * Voeg deze vervolgens aan de providers array toe om de service beschikbaar te stellen voor de hele module
 *
 ``` diff
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
+import { AngularFireModule } from 'angularfire2';
+import { routing } from './app.routing';
+import { AppComponent } from './app.component';
+import { GroepComponent } from './groep/groep.component';
 + import { GroepService } from './groep/groep.service';
-+ providers: [ GroepService ]
+
+// Must export the config
+export const firebaseConfig = {
+    apiKey: "AIzaSyD1LgKHv8s8-awyabqjYfG5y-1D7_fKn5I",
+    authDomain: "angularfirebase-276b0.firebaseapp.com",
+    databaseURL: "https://angularfirebase-276b0.firebaseio.com",
+    storageBucket: "angularfirebase-276b0.appspot.com",
+};
+@NgModule({
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    AngularFireModule.initializeApp(firebaseConfig),
+    routing
+  ],
++  providers: [
++    GroepService
++  ],
+  declarations: [ AppComponent, GroepComponent ],
+  bootstrap: [ AppComponent ]
+})
+export class AppModule {}
 ```
 
 Om de groep service vervolgens te gebruiken in het groep component:
