@@ -4,7 +4,7 @@ In dit blog laat ik je zien hoe je met Angular2 en Firebase snel een prototype w
 Wat niet wordt behandeld in dit blog zijn de volgende onderwerpen:
 *	Unit testen van de applicatie
 *	Modulariseren van de applicatie
-*	Complete uitleg hoe een Angular project te starten, we maken gebruik van de Angular-CLI om snel aan de slag te kunnen
+*	Complete uitleg hoe een Angular2 project te starten, we maken gebruik van de Angular-CLI om snel aan de slag te kunnen
 * Complete uitleg Angular2
 *	User authentication met Firebase
 * Verschil tussen AngularJS en Angular2
