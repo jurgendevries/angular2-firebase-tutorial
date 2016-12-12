@@ -5,7 +5,9 @@ Wat niet wordt behandeld in dit blog zijn de volgende onderwerpen:
 *	Unit testen van de applicatie
 *	Modulariseren van de applicatie
 *	Complete uitleg hoe een Angular project te starten, we maken gebruik van de Angular-CLI om snel aan de slag te kunnen
+* Complete uitleg Angular2
 *	User authentication met Firebase
+* Verschil tussen AngularJS en Angular2
 
 # Code
 In deze tutorial wordt de code in blokken getoond. Hierin wordt voor de TypeScript en html code getoond wat er wordt toegevoegd aan de code of verwijderd. Dat ziet er als volgt uit:
