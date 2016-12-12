@@ -745,7 +745,6 @@ export class GroepComponent implements OnInit {
     }    
   }
 
-
 +  selecteerGroep(groepId: string): void {
 +    this.router.navigate(['/groepen, groepId]);
 +  }
