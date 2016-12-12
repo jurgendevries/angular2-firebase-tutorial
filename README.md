@@ -545,7 +545,6 @@ import { Groep } from './groep.model';
 Om gebruik te kunnen maken van groep service moet deze eerst toegevoegd worden aan het groep component en aan de app.module.ts.
 * Importeer de service in app.module.ts
 * Voeg deze vervolgens aan de providers array toe om de service beschikbaar te stellen voor de hele module
-*
 ``` diff
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -622,5 +621,5 @@ export class GroepComponent implements OnInit {
 ```
 Met deze vernieuwde code maken we nu een nieuwe groep aan en geven deze vervolgens door aan de groepService waar alles verder afgehandeld wordt.
 
-Aan de voorkant is verschil te zien, maar de code is onderhoudbaarder en we kunnen niet meer iets anders dan een groep meegeven aan de groepToevoegen functie. Doen we dit wel dan worden we hier in een vroegtijdig stadium al op gewezen.
+Aan de voorkant is verschil te zien, maar de code is beter onderhoudbaar en we kunnen niet meer iets anders dan een groep meegeven aan de groepToevoegen functie. Doen we dit wel dan worden we hier in een vroegtijdig stadium al op gewezen.
 
