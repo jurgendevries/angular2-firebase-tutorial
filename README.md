@@ -526,11 +526,13 @@ import { Groep } from './groep.model';
 + @Injectable()
 + export class GroepService {
 +    private groepen: FirebaseListObservable<any[]>;
+
 +    constructor(
 +        private af: AngularFire
 +    ) {
 +        this.groepen = af.database.list('/groepen');
 +    }
+
 +    groepToevoegen(groep: Groep): void {
 +        this.groepen.push(groep)
 +        .then(response => {
@@ -540,6 +542,7 @@ import { Groep } from './groep.model';
 +          console.log(error);
 +        });
 +    }
+
 +    getGroepen(): FirebaseListObservable<any[]> {
 +        return this.groepen;
 +    }
@@ -1006,5 +1009,5 @@ export class ContactComponent implements OnInit {
   }
 }
 ```
-Wanneer je nu naar http://localhost:4200 gaat zou je als alles goed is gegaan nu contacten aan groepen toe kunnen voegen. En deze contacten zou je alleen onder de groep terug moeten zien waar je het contact hebt aangemaakt.
+Wanneer je nu naar [http://localhost:4200](http://localhost:4200) gaat zou je als alles goed is gegaan nu contacten aan groepen toe kunnen voegen. En deze contacten zou je alleen onder de groep terug moeten zien waar je het contact hebt aangemaakt.
 We hebben nu een werkend adresboek. Ok, het is niet het mooiste adresboek maar de benodigde functionaliteit zit erin. 
