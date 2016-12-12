@@ -28,6 +28,7 @@ Wordt de code compleet vervangen in een bestand of is alle code nieuw dan wordt 
 
 # Firebase account/project aanmaken en instellen
 Ga naar [https://firebase.google.com/](https://firebase.google.com/ "Firebase")
+
 ![alt text](https://github.com/jurgendevries/angular2-firebase-tutorial/blob/master/firebase-start.jpg "Firebase")
 
 Klik rechts boven op ‘Aanmelden’. Je kunt hier makkelijk met je Google account aanmelden.
@@ -49,9 +50,11 @@ Wanneer je in het topmenu teruggaat naar **Data**, zie je de url van je database
 [https://NAAM-PROJECT.firebaseio.com/](https://NAAM-PROJECT.firebaseio.com/ "Firebase project link")
 
 Aangezien er nog geen data ingevoerd is zie je hier verder niks.
+
 ![alt text](https://github.com/jurgendevries/angular2-firebase-tutorial/blob/master/firebase-data-leeg.jpg "Firebase geen data")
 
 Om Firebase straks aan onze applicatie te kunnen koppelen hebben we een aantal gegevens nodig. Door in het linkermenu op ‘Overview’ te klikken kom je weer terug op het project overzicht. Klik hier op ‘Firebase toevoegen aan uw webapp’.
+
 ![alt text](https://github.com/jurgendevries/angular2-firebase-tutorial/blob/master/firebase-overview.jpg "Firebase project overzicht")
 
 Kopieer het JSON-object wat getoond wordt en bewaar deze, we zullen de gegevens straks nodig hebben.
@@ -171,6 +174,7 @@ En vervang de code in **src/app/app.component.html** voor:
 Omdat er nog geen data in Firebase staat, gaan we deze direct in Firebase toevoegen. Via het dashboard ga je in het linker menu naar database. Via het plusje op het hoofd element kun je makkelijk data toevoegen.
 
 Geef de naam **items** op en laat het waarde veld leeg. Klik op het plusje van het nieuwe element en geef hier de naam **item1** aan. Laat ook hier het waarde veld leeg en klik op het plusje van dit element. In het nieuwe element geef je als naam **value** op en in het waarde veld zet je **item1**. Herhaal de stappen om een tweede item **item2** toe te voegen en druk daarna op toevoegen.
+
 ![alt text](https://github.com/jurgendevries/angular2-firebase-tutorial/blob/master/firebase-data.jpg "Firebase data")
 
 Wanneer je je browser venster weer bekijkt zou je je nieuw toegevoegde items nu moeten zien.
