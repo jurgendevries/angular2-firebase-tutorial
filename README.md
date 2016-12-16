@@ -1053,7 +1053,7 @@ Wanneer alles klaar is ga je naar je nieuwe project link en zou je daar de appli
 Cannot find name ‘require’
 ```
 Wanneer deze melding in je commando venster verschijnt, zoek dan de file src/typings.d.ts op en voeg onderaan de volgende 2 regels toe:
-``` dif
+``` diff
 + declare var require: any; 
 + declare var module: any;
 ```
