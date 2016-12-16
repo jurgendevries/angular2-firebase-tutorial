@@ -1010,3 +1010,58 @@ export class ContactComponent implements OnInit {
 ```
 Wanneer je nu naar [http://localhost:4200](http://localhost:4200) gaat zou je als alles goed is gegaan nu contacten aan groepen toe kunnen voegen. En deze contacten zou je alleen onder de groep terug moeten zien waar je het contact hebt aangemaakt.
 We hebben nu een werkend adresboek. Ok, het is niet het mooiste adresboek maar de benodigde functionaliteit zit erin. 
+
+# Heroku
+Als laatste (optionele) stap deployen we de applicatie nog naar Heroku zodat jij niet de enige persoon bent die deze applicatie kan bekijken.
+
+Zorg ervoor dat je een gratis account op Heroku aanmaakt en de Heroku Toolbelt hebt geïnstalleerd. (zie ook: [https://devcenter.heroku.com/articles/heroku-cli](https://devcenter.heroku.com/articles/heroku-cli "Heroku Toolbelt"))
+
+Nadat dit gereed is zijn er een paar kleine aanpassingen in het project nodig om te kunnen deployen naar Heroku.
+
+We gaan eerst kijken of de applicatie goed gebouwd kan worden. Zonde om er op het laatste moment achter te komen dat dat niet werkt. Type CTRL + c om de Angular-CLI te stoppen en type vervolgens J om te bevestigen. Met het volgende commando voer je een build uit:
+``` sh
+Ng build
+```
+Werkt dit dat kun je verder. Om het deployen op Heroku te laten werken zijn een aantal wijzigingen in het bestand **src/package.json** nodig. We beginnen met de scripts. Pas deze als volgt aan:
+``` diff
+"scripts": { 
++  "start": "http-server", 
+  "lint": "tslint \"src/**/*.ts\"", 
+  "test": "ng test", 
+  "pree2e": "webdriver-manager update",
+  "e2e": "protractor", 
++  "preinstall": "npm install -g http-server", 
++  "postinstall": "ng build && mv dist/* ." 
+},
+```
+Het start commando is niet meer ng serve, we gebruiken http-server om onze app te serveren. In de preisntall fase wordt deze geïnstalleerd. In de postinstall fase wordt het ng build commando uitgevoerd en wordt de dist folder naar de hoofd directory verplaatst.
+
+Daarnaast moet alles wat onder devDependencies staat worden verplaatst naar dependencies, anders wordt dit niet door Heroku opgepakt.
+
+Maak vanuit het commando venster vervolgens een nieuw Heroku project aan met:
+``` sh
+Heroku create
+```
+Commit alle wijzigingen met git. En om alles naar Heroku te deployen:
+``` sh
+git push heroku master.
+```
+Wanneer alles klaar is ga je naar je nieuwe project link en zou je daar de applicatie moeten zien.
+
+# Troubleshooting
+``` sh
+Cannot find name ‘require’
+```
+Wanneer deze melding in je commando venster verschijnt, zoek dan de file src/typings.d.ts op en voeg onderaan de volgende 2 regels toe:
+``` dif
++ declare var require: any; 
++ declare var module: any;
+```
+
+``` sh
+Cannot find namespace ‘firebase’
+```
+Wanneer je deze melding in je commando venster tegenkomt, zoek dan de file src/tsconfig.json op en voeg onderaan (maar binnen de hoofdnode) de volgende property toe:
+``` diff
++ "files": [ "../node_modules/firebase/firebase.d.ts" ]
+```
