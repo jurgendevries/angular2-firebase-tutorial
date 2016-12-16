@@ -1022,22 +1022,61 @@ We gaan eerst kijken of de applicatie goed gebouwd kan worden. Zonde om er op he
 ``` sh
 Ng build
 ```
-Werkt dit dat kun je verder. Om het deployen op Heroku te laten werken zijn een aantal wijzigingen in het bestand **src/package.json** nodig. We beginnen met de scripts. Pas deze als volgt aan:
+Werkt dit dat kun je verder. Om het deployen op Heroku te laten werken zijn een aantal wijzigingen in het bestand **src/package.json** nodig. 
+* Het start commando passen we aan om gebruik te maken van http-server. 
+* In de preisntall fase wordt http-server geïnstalleerd. 
+* In de postinstall fase wordt het ng build commando uitgevoerd en wordt de dist folder naar de hoofd directory verplaatst.
+* En als laatste moet alles wat onder devDependencies staat worden verplaatst naar dependencies, anders wordt dit niet door Heroku opgepakt. (versies kunnen hier en daar afwijken)
 ``` diff
-"scripts": { 
-+  "start": "http-server", 
-  "lint": "tslint \"src/**/*.ts\"", 
-  "test": "ng test", 
-  "pree2e": "webdriver-manager update",
-  "e2e": "protractor", 
-+  "preinstall": "npm install -g http-server", 
-+  "postinstall": "ng build && mv dist/* ." 
-},
+{
+  "name": "project-name",
+  "version": "0.0.1",
+  "license": "MIT",
+  "angular-cli": {}
+  "scripts": { 
++    "start": "http-server", 
+    "lint": "tslint \"src/**/*.ts\"", 
+    "test": "ng test", 
+    "pree2e": "webdriver-manager update",
+    "e2e": "protractor", 
++    "preinstall": "npm install -g http-server", 
++    "postinstall": "ng build && mv dist/* ." 
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/common": "2.0.0",
+    "@angular/compiler": "2.0.0",
+    "@angular/core": "2.0.0",
+    "@angular/forms": "2.0.0",
+    "@angular/http": "2.0.0",
+    "@angular/platform-browser": "2.0.0",
+    "@angular/platform-browser-dynamic": "2.0.0",
+    "@angular/router": "3.0.0",
++    "angularfire2": "^2.0.0-beta.6",
++    "core-js": "^2.4.1",
++    "firebase": "^3.6.1",
++    "rxjs": "5.0.0-beta.12",
++    "ts-helper": "^1.1.1",
++    "zonejs": "^0.6.23",
++    "@types/jasmine": "^2.2.30",
++    "angular-cli": "1.0.0-beta.16",
++    "codelyzer": "~0.0.26",
++    "jasmine-core": "2.4.1",
++    "jasmine-spec-reporter": "2.5.0",
++    "karma": "1.2.0",
++    "karma-chrome-launcher": "^2.0.0",
++    "karma-cli": "^1.0.1",
++    "karma-jasmine": "^1.0.2",
++    "karma-remap-istanbul": "^0.2.1",
++    "protractor": "4.0.9",
++    "ts-node": "1.2.1",
++    "tslint": "3.13.0",
++    "typescript": "2.0.2"
+  },
+  "devDependencies": {
+  }
+}
 ```
-Het start commando is niet meer ng serve, we gebruiken http-server om onze app te serveren. In de preisntall fase wordt deze geïnstalleerd. In de postinstall fase wordt het ng build commando uitgevoerd en wordt de dist folder naar de hoofd directory verplaatst.
-
-Daarnaast moet alles wat onder devDependencies staat worden verplaatst naar dependencies, anders wordt dit niet door Heroku opgepakt.
-
 Maak vanuit het commando venster vervolgens een nieuw Heroku project aan met:
 ``` sh
 Heroku create
