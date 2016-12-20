@@ -1,12 +1,21 @@
-# Introductie
+# Introductie in Angular(2) en Firebase
+In deze tutorial laat ik je zien hoe je met Angular en Firebase snel een prototype (of POC) voor een web applicatie neer kan zetten. 
+Door gebruik te maken van Firebase hoef je je niet druk te maken over de backend van je web applicatie. Dit laten we door Firebase afhandelen. Het is zelfs mogelijk om Authenticatie en Hosting door Firebase te laten regelen. Dat wordt in dit blog niet behandeld. Wel gaan we een web applicatie maken waarin je contacten kan opslaan en groeperen. 
+In dit blog komen verschillende aspecten aan bod:
+* Hoe zet je snel een Angular applicatie neer?
+* Hoe maak je connectie met Firebase vanuit Angular?
+* Hoe sla je data op in Firebase en hoe haal je dit er weer uit?
+* Werken met een Router in Angular
+* Deployen van een Angular applicatie naar Heroku
 
-In dit blog laat ik je zien hoe je met Angular2 en Firebase snel een prototype webapp neer kan zetten. Door gebruik te maken van Firebase hoef je je niet druk te maken over de backend van je webapp. Dit laten we door Firebase afhandelen. Het is zelfs mogelijk om Authenticatie en Hosting door Firebase te laten regelen. Dat wordt in dit blog niet behandeld. Wel gaan we een webapp maken waarin je contacten kan opslaan en groeperen. En deze webapp vervolgens op een gratis Heroku account deployen.
 Wat niet wordt behandeld in dit blog zijn de volgende onderwerpen:
-*	Complete uitleg Angular2 en hoe een Angular2 project te starten, we maken gebruik van de Angular-CLI om snel aan de slag te kunnen
+*	Complete uitleg Angular2 en hoe handmatig een Angular2 project te starten, we maken gebruik van de Angular-CLI om snel aan de slag te kunnen
 * Verschil tussen AngularJS en Angular2
 *	Unit testen van de applicatie
 *	Modulariseren van de applicatie
 *	User authentication met Firebase
+
+Wellicht komen een aantal van deze componenten in een toekomstige tutorial aan bod.
 
 # Code
 In deze tutorial wordt de code in blokken getoond. Hierin wordt voor de TypeScript en html code getoond wat er wordt toegevoegd aan de code of verwijderd. Dat ziet er als volgt uit:
