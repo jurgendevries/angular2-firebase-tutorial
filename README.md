@@ -336,7 +336,7 @@ export class GroepComponent implements OnInit {
 +    if (formData.valid) {
 +      this.groepen.push({titel: formData.value.titel})
 +        .then(response => {
-+          console.log("Groep toegevoegd!");
++          console.log('Groep toegevoegd!');
 +          formData.reset();
 +        })
 +        .catch(error => {
