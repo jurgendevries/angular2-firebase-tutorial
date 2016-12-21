@@ -403,6 +403,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
+
 + import { routing } from './app.routing';
 import { AppComponent } from './app.component';
 import { GroepComponent } from './groep/groep.component';
@@ -474,7 +475,7 @@ Maak in de groep folder een nieuwe bestand aan met de naam **src/app/groep/groep
 ``` typescript
 export class Groep {
     constructor(
-        public titel: string,
+        public titel: string
     ) {}
 };
 ```
@@ -493,6 +494,7 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
   templateUrl: './groep.component.html',
   styleUrls: ['./groep.component.css']
 })
+
 export class GroepComponent implements OnInit {
   groepen: FirebaseListObservable<any[]>;
   constructor(
@@ -518,7 +520,7 @@ export class GroepComponent implements OnInit {
 
 }
 ```
-Probeer je nu nog een element mee te geven in bij het aanmaken van de groep, of een titel die geen string is, dan krijg je hier een foutmelding van in je commando venster (of je IDE/editor als deze TypeScript ondersteuning heeft).
+Probeer je nu nog een tweede parameter mee te geven bij het aanmaken van de groep, of een titel die geen string is, dan krijg je hier een foutmelding van in je commando venster (of je IDE/editor als deze TypeScript ondersteuning heeft).
 
 # Service
 We hebben de communicatie met Firebase nu verwerkt in het groep component. Mochten we ooit Firebase in willen ruilen voor een andere backend dan moeten we in het component de communicatie gaan aanpassen. Het is beter om deze communicatie via een service te laten lopen om op die manier de communicatie met de backend gescheiden te houden van het component zelf.
@@ -559,9 +561,9 @@ import { Groep } from './groep.model';
 +    getGroepen(): FirebaseListObservable<any[]> {
 +        return this.groepen;
 +    }
-+}
++ }
 ```
-Om gebruik te kunnen maken van groep service moet deze eerst toegevoegd worden aan het groep component en aan de app.module.ts.
+Om gebruik te kunnen maken van de groep service moet deze eerst toegevoegd worden aan het groep component en aan de app.module.ts.
 * Importeer de service in **src/app/app.module.ts**
 * Voeg deze vervolgens aan de providers array toe om de service beschikbaar te stellen voor de hele module
 ``` diff
@@ -644,7 +646,7 @@ export class GroepComponent implements OnInit {
 ```
 Met deze vernieuwde code maken we nu een nieuwe groep aan en geven deze vervolgens door aan de groepService waar alles verder afgehandeld wordt.
 
-Aan de voorkant is verschil te zien, maar de code is beter onderhoudbaar en we kunnen niet meer iets anders dan een groep meegeven aan de groepToevoegen functie. Doen we dit wel dan worden we hier in een vroegtijdig stadium al op gewezen.
+Aan de voorkant is geen verschil te zien, maar de code is beter onderhoudbaar en we kunnen niet meer iets anders dan een groep meegeven aan de groepToevoegen functie. Doen we dit wel dan worden we hier in een vroegtijdig stadium al op gewezen.
 
 # Contacten
 Zoals eerder aangegeven gaan we het contact component niet genereren maar zelf aanmaken. We beginnen met het aanmaken van een model voor de contacten. Maak een nieuwe map aan genaamd **src/app/contact**. En een nieuw bestand toe **src/app/contact/contact.model.ts** met de volgende inhoud:
