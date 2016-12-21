@@ -761,7 +761,7 @@ export class GroepComponent implements OnInit {
   }
 
 +  selecteerGroep(groepId: string): void {
-+    this.router.navigate(['/groepen, groepId]);
++    this.router.navigate(['/groepen', groepId]);
 +  }
 
   ngOnInit() {
@@ -784,7 +784,7 @@ In het groep template gaan we vervolgens een toevoeging doen aan de groep titel 
   </li>
 </ul>
 ```
-Door het **(click)** attribuut wordt de selecteerGroep functie aangeroepen bij het aanklikken van de link. We geven **groep.$key** mee aan de functie, de $key is het ID van de groep zoals deze in Firebase opgeslagen is. Wanneer de functie selecteerGroep aangeroepen wordt, worden we doorverwezen naar de link ‘/groepen/GROEPID’. Hier hebben we nog geen route voor. Maak een nieuwe route aan in app.routing.ts en importeer het contact component:
+Door het **(click)** attribuut wordt de selecteerGroep functie aangeroepen bij het aanklikken van de link. We geven **groep.$key** mee aan de functie, de $key is het ID van de groep zoals deze in Firebase opgeslagen is. Wanneer de functie selecteerGroep aangeroepen wordt, worden we doorverwezen naar de link ‘/groepen/GROEPID’. Hier hebben we nog geen route voor. Maak een nieuwe route aan in **app.routing.ts** en importeer het contact component:
 ``` diff
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -859,8 +859,7 @@ export class ContactComponent implements OnInit {
   }
 }
 ```
-
-Als laatste moet we hiervoor nog de functie getContacten in de contact service aanpassen, het is namelijk niet meer de bedoeling om alle contacten binnen te halen, **src/app/contact/contact.service.ts**:
+Dit zal voor een foutmelding zorgen omdat de functie getContacten in **src/app/contact/contact.service.ts** nog geen parameter verwacht. Als laatste moeten we hiervoor nog de functie getContacten in de contact service aanpassen, het is namelijk ook niet meer de bedoeling om alle contacten binnen te halen, **src/app/contact/contact.service.ts**:
 ``` diff
 import { Injectable } from '@angular/core';
 import { AngularFire, FirebaseListObservable  } from 'angularfire2';
@@ -879,7 +878,7 @@ export class ContactService {
     contactToevoegen(contact: Contact): void {
         this.contacten.push(contact)
         .then(response => {
-          console.log("Groep toegevoegd!");
+          console.log("Contact toegevoegd!");
         })
         .catch(error => {
           console.log(error);
@@ -956,9 +955,8 @@ export class AppModule {}
 ```
 
 
-Als je je commando venster nog hebt draaien ga je naar http://localhost:4200 heb je je commando venster niet meer draaien, ga dan naar je projectfolder en type ng serve om de applicatie weer te starten.
-En als het goed is zie je hier het overzicht van je groepen. Klik een groep aan en als het goed is kom je op een lege pagina terrecht. De link van deze pagina zal er als http://localhost:4200/groepen/-KXQw3F3TS-ex60A-zOO uit zien.
-Maar we zien hier nu natuurlijk nog geen contacten. Daarvoor voegen we een formulier op de pagina toe om contacten mee aan te maken. Ga daarvoor naar het bestand contact.component.ts en voeg de volgende code bovenaan het bestand toe:
+Als je je commando venster nog hebt draaien ga je naar [http://localhost:4200](http://localhost:4200) heb je je commando venster niet meer draaien, ga dan naar je projectfolder en type ng serve om de applicatie weer te starten.
+En als het goed is zie je hier het overzicht van je groepen. Klik een groep aan en als het goed is kom je op een lege pagina terrecht. De link van deze pagina zal er als [http://localhost:4200/groepen/-KXQw3F3TS-ex60A-zOO](http://localhost:4200/groepen/-KXQw3F3TS-ex60A-zOO) uit zien. Maar we zien hier nu natuurlijk nog geen contacten. Daarvoor voegen we een formulier op de pagina toe om contacten mee aan te maken. Ga daarvoor naar het bestand contact.component.ts en voeg de volgende code bovenaan het bestand toe:
 ``` diff
 + <form #formData="ngForm">
 +  <div class="form-group">
@@ -1059,24 +1057,26 @@ Werkt dit dat kun je verder. Om het deployen op Heroku te laten werken zijn een 
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "2.0.0",
-    "@angular/compiler": "2.0.0",
-    "@angular/core": "2.0.0",
-    "@angular/forms": "2.0.0",
-    "@angular/http": "2.0.0",
-    "@angular/platform-browser": "2.0.0",
-    "@angular/platform-browser-dynamic": "2.0.0",
-    "@angular/router": "3.0.0",
-+    "angularfire2": "^2.0.0-beta.6",
-+    "core-js": "^2.4.1",
-+    "firebase": "^3.6.1",
-+    "rxjs": "5.0.0-beta.12",
-+    "ts-helper": "^1.1.1",
-+    "zonejs": "^0.6.23",
-+    "@types/jasmine": "^2.2.30",
-+    "angular-cli": "1.0.0-beta.16",
-+    "codelyzer": "~0.0.26",
-+    "jasmine-core": "2.4.1",
+    "@angular/common": "2.2.3",
+    "@angular/compiler": "2.2.3",
+    "@angular/core": "2.2.3",
+    "@angular/forms": "2.2.3",
+    "@angular/http": "2.2.3",
+    "@angular/platform-browser": "2.2.3",
+    "@angular/platform-browser-dynamic": "2.2.3",
+    "@angular/router": "3.2.3",
+    "angularfire2": "^2.0.0-beta.6",
+    "core-js": "^2.4.1",
+    "firebase": "^3.6.3",
+    "rxjs": "5.0.0-beta.12",
+    "ts-helpers": "^1.1.1",
+    "zone.js": "^0.6.23",
++    "@angular/compiler-cli": "2.2.3",
++    "@types/jasmine": "2.5.38",
++    "@types/node": "^6.0.42",
++    "angular-cli": "1.0.0-beta.22-1",
++    "codelyzer": "~2.0.0-beta.1",
++    "jasmine-core": "2.5.2",
 +    "jasmine-spec-reporter": "2.5.0",
 +    "karma": "1.2.0",
 +    "karma-chrome-launcher": "^2.0.0",
@@ -1085,8 +1085,9 @@ Werkt dit dat kun je verder. Om het deployen op Heroku te laten werken zijn een 
 +    "karma-remap-istanbul": "^0.2.1",
 +    "protractor": "4.0.9",
 +    "ts-node": "1.2.1",
-+    "tslint": "3.13.0",
-+    "typescript": "2.0.2"
++    "tslint": "^4.0.2",
++    "typescript": "~2.0.3",
++    "webdriver-manager": "10.2.5"
   },
   "devDependencies": {
   }
