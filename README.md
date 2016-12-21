@@ -1057,13 +1057,13 @@ Werkt dit dat kun je verder. Om het deployen op Heroku te laten werken zijn een 
   },
   "private": true,
   "dependencies": {
-    "@angular/common": "2.2.3",
-    "@angular/compiler": "2.2.3",
-    "@angular/core": "2.2.3",
-    "@angular/forms": "2.2.3",
-    "@angular/http": "2.2.3",
-    "@angular/platform-browser": "2.2.3",
-    "@angular/platform-browser-dynamic": "2.2.3",
+    "@angular/common": "2.4.0",
+    "@angular/compiler": "2.4.0",
+    "@angular/core": "2.4.0",
+    "@angular/forms": "2.4.0",
+    "@angular/http": "2.4.0",
+    "@angular/platform-browser": "2.4.0",
+    "@angular/platform-browser-dynamic": "2.4.0",
     "@angular/router": "3.2.3",
     "angularfire2": "^2.0.0-beta.6",
     "core-js": "^2.4.1",
@@ -1071,7 +1071,7 @@ Werkt dit dat kun je verder. Om het deployen op Heroku te laten werken zijn een 
     "rxjs": "5.0.0-beta.12",
     "ts-helpers": "^1.1.1",
     "zone.js": "^0.6.23",
-+    "@angular/compiler-cli": "2.2.3",
++    "@angular/compiler-cli": "2.4.0",
 +    "@types/jasmine": "2.5.38",
 +    "@types/node": "^6.0.42",
 +    "angular-cli": "1.0.0-beta.22-1",
@@ -1102,6 +1102,11 @@ Commit alle wijzigingen met git. En om alles naar Heroku te deployen:
 git push heroku master.
 ```
 Wanneer alles klaar is ga je naar je nieuwe project link en zou je daar de applicatie moeten zien.
+Je kan dit ook met de Heroku Toolbelt via het volgende commando:
+``` sh
+heroku open
+```
+De eerste keer opstarten duurt vaak wat langer. De dyno van heroku moet dan namelijk opgestart worden.
 
 # Troubleshooting
 ``` sh
@@ -1120,3 +1125,8 @@ Wanneer je deze melding in je commando venster tegenkomt, zoek dan de file src/t
 ``` diff
 + "files": [ "../node_modules/firebase/firebase.d.ts" ]
 ```
+
+``` sh
+ERROR in Cannot read property 'listLazyRoutes' of undefined
+```
+Mocht je deze melding krijgen bij het deployen naar Heroku update dan alle @angular dependencies in je **src/package.json** naar 2.4.0 of hoger als je dit nog niet hebt.
