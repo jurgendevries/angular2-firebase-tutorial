@@ -1033,7 +1033,7 @@ Nadat dit gereed is zijn er een paar kleine aanpassingen in het project nodig om
 
 We gaan eerst kijken of de applicatie goed gebouwd kan worden. Zonde om er op het laatste moment achter te komen dat dat niet werkt. Type CTRL + c om de Angular-CLI te stoppen en type vervolgens J om te bevestigen. Met het volgende commando voer je een build uit:
 ``` sh
-Ng build
+ng build
 ```
 Werkt dit dat kun je verder. Om het deployen op Heroku te laten werken zijn een aantal wijzigingen in het bestand **src/package.json** nodig. 
 * Het start commando passen we aan om gebruik te maken van http-server. 
@@ -1095,7 +1095,7 @@ Werkt dit dat kun je verder. Om het deployen op Heroku te laten werken zijn een 
 ```
 Maak vanuit het commando venster vervolgens een nieuw Heroku project aan met:
 ``` sh
-Heroku create
+heroku create
 ```
 Commit alle wijzigingen met git. En om alles naar Heroku te deployen:
 ``` sh
