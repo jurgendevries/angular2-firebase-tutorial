@@ -464,6 +464,8 @@ export class AppComponent {
 ```
 Verwijder vervolgens ook de items array via het Firebase Data Dashboard, deze hebben we niet meer nodig.
 
+Wanneer je nu naar [http://localhost:4200](http://localhost:4200) gaat is daar het formulier te zien. We kunnen nu groepen aanmaken en deze groepen verschijnen direct na het opslaan in beeld.
+
 # Model
 Door het gebruik van TypeScript hebben we de mogelijkheid om types mee te geven aan variabelen en parameters in functies. Wanneer je een functie definieert die een integer verwacht om mee te rekenen, maar je roept die functie per ongeluk aan met een string krijg je natuurlijk onverwachte uitkomsten. Door types mee te geven aan je functie parameters krijg je van je IDE/Editor al meldingen dat je verkeerde type parameters meegeeft in je functie aanroep. Hierdoor wordt je eerder op je fouten gewezen en dit scheelt je later een hoop debuggen.
 
