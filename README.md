@@ -358,8 +358,8 @@ Omdat we niet alles in 1 overzicht willen tonen maar per groep de contacten en e
 
 Momenteel is het nog niet mogelijk om dit vanuit de AngularCLI te genereren dus doen we dit met hand.
 
-Om de router te activeren zijn een aantal stappen benodigd. In **src/app/app.component.html** voegen we de tag <router-outlet></router-outlet> toe net voor de sluit tag van de container-div. 
-``` html
+Om de router te activeren zijn een aantal stappen benodigd. In **src/app/app.component.html** voegen we de tag **router-outlet** toe net voor de sluit tag van de container-div. 
+``` diff
 <div class="container">
   <ul>
     <li class="text" *ngFor="let item of items | async">
