@@ -1,0 +1,19 @@
+ <form #formData="ngForm">
+  <div class="form-group">
+    <input type="text" class="form-control" (ngModel)="naam" placeholder="Naam" id="naam" name="naam" rows="10" required/>
+  </div>
+  <div class="form-group">
+    <input type="text" class="form-control" (ngModel)="adres" placeholder="Adres" id="adres" name="adres" rows="10" required/>
+  </div>
+  <div class="form-group">
+    <input type="text" class="form-control" (ngModel)="tel" placeholder="Telefoonnummer" id="tel" name="tel" rows="10" required/>
+  </div>
+  <button [disabled]="!formData.valid" (click)="contactToevoegen(formData)" class="btn btn-primary">Opslaan</button>
+ </form>
+<ul>
+  <li *ngFor="let contact of contacten | async">
+    {{ contact.naam }}<br/>
+    {{ contact.adres }}<br/>
+    {{ contact.tel }}
+  </li>
+</ul>

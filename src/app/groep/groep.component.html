@@ -1,0 +1,11 @@
+<form #formData='ngForm'>
+  <div class="form-group">
+    <input type="text" class=”form-control” (ngModel)="text" placeholder="Groep titel" id="titel" name="titel" rows="10" required/>
+  </div>
+  <button [disabled]="!formData.valid" (click)="groepToevoegen(formData)" class="btn btn-primary">Opslaan</button>
+</form>
+<ul>
+  <li *ngFor="let groep of groepen | async" (click)="selecteerGroep(groep.$key)">
+    {{ groep.titel }}
+  </li>
+</ul>
