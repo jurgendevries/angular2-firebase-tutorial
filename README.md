@@ -443,10 +443,12 @@ import { Component } from '@angular/core';
 
 export class AppComponent {
 -  items: FirebaseListObservable<any[]>;
-
+  
   constructor(
+-    af: AngularFire
+  ) {
 -    this.items = af.database.list('/items');
-  ) {}
+    }
 }
 ```
 **src/app/app.component.html**:
