@@ -1130,3 +1130,5 @@ Wanneer je deze melding in je commando venster tegenkomt, zoek dan de file src/t
 ERROR in Cannot read property 'listLazyRoutes' of undefined
 ```
 Mocht je deze melding krijgen bij het deployen naar Heroku update dan alle @angular dependencies in je **src/package.json** naar 2.4.0 of hoger als je dit nog niet hebt.
+
+De **src** folder en de **package.json** zijn ook aan deze GitHub repository toegevoegd als vergelijkingsmateriaal mocht je alsnog tegen problemen aanlopen.
