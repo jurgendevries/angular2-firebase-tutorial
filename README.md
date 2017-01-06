@@ -1131,4 +1131,16 @@ ERROR in Cannot read property 'listLazyRoutes' of undefined
 ```
 Mocht je deze melding krijgen bij het deployen naar Heroku update dan alle @angular dependencies in je **src/package.json** naar 2.4.0 of hoger als je dit nog niet hebt.
 
+``` sh
+UNMET PEER DEPENDENCY rxjs@5.0.2
+```
+Wanneer je deze melding krijgt bij het installeren van de Firebase en Angularfire2 dependencies is dat als volgt op te lossen:
+* In de package.json van je aangemaakte project wijzig je de versie van rxjs onder dependencies naar 5.0.2.
+* Zoek vervolgens in de **node_modules** folder naar de  **angularfire2** map. Hier zit ook een package.json in. Zoek ook hier naar de rxjs dependency en wijzig deze ook naar versie 5.0.2
+* In het commando venster type je vervolgens het commando:
+``` sh
+npm install
+```
+Als het goed is moet het probleem nu opgelost zijn.
+
 De **src** folder en de **package.json** zijn ook aan deze GitHub repository toegevoegd als vergelijkingsmateriaal mocht je alsnog tegen problemen aanlopen.
