@@ -956,7 +956,7 @@ export class AppModule {}
 
 
 Als je je commando venster nog hebt draaien ga je naar [http://localhost:4200](http://localhost:4200) heb je je commando venster niet meer draaien, ga dan naar je projectfolder en type ng serve om de applicatie weer te starten.
-En als het goed is zie je hier het overzicht van je groepen. Klik een groep aan en als het goed is kom je op een lege pagina terrecht. De link van deze pagina zal er als [http://localhost:4200/groepen/-KXQw3F3TS-ex60A-zOO](http://localhost:4200/groepen/-KXQw3F3TS-ex60A-zOO) uit zien. Maar we zien hier nu natuurlijk nog geen contacten. Daarvoor voegen we een formulier op de pagina toe om contacten mee aan te maken. Ga daarvoor naar het bestand contact.component.ts en voeg de volgende code bovenaan het bestand toe:
+En als het goed is zie je hier het overzicht van je groepen. Klik een groep aan en als het goed is kom je op een lege pagina terrecht. De link van deze pagina zal er als [http://localhost:4200/groepen/-KXQw3F3TS-ex60A-zOO](http://localhost:4200/groepen/-KXQw3F3TS-ex60A-zOO) uit zien. Maar we zien hier nu natuurlijk nog geen contacten. Daarvoor voegen we een formulier op de pagina toe om contacten mee aan te maken. Ga daarvoor naar het bestand **contact.component.html** en voeg de volgende code bovenaan het bestand toe:
 ``` diff
 + <form #formData="ngForm">
 +  <div class="form-group">
