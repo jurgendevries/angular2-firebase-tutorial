@@ -76,12 +76,11 @@ Om Angular-CLI te installeren heb je NodeJS en NPM nodig. Voor AngularFire2 heb 
 
 Wanneer je NodeJS en NPM geïnstalleerd hebt kun je Angular CLI installeren. Ga naar de folder waar je je webapp wilt ontwikkelen. Met het volgende commando in Windows Command venster wordt Angular-CLI geïnstalleerd:
 ```sh
-npm install -g angular-cli@latest
+npm install -g @angular/cli
 npm install -g typings 
 npm install -g typescript
 ```
 
-@latest zorgt ervoor dat je de nieuwste versie van Angular-CLI installeert.
 -g zorgt ervoor dat Angular-CLI globaal beschikbaar wordt gesteld.
 Naast Angular-CLI installeren we ook typings en typescript om gebruik te kunnen maken van TypeScript.
 
@@ -114,6 +113,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 + import { AngularFireModule } from 'angularfire2';
++ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AppComponent } from './app.component';
 
 + export const firebaseConfig = {
@@ -128,7 +128,8 @@ import { AppComponent } from './app.component';
     BrowserModule,
     FormsModule,
     HttpModule,
-+    AngularFireModule.initializeApp(firebaseConfig)
++    AngularFireModule.initializeApp(firebaseConfig),
++    AngularFireDatabaseModule
   ],
   declarations: [ AppComponent ],
   bootstrap: [ AppComponent ]
@@ -138,7 +139,7 @@ export class AppModule {}
 Vervolgens voegen we Firebase aan **src/app/app.component.ts** toe om het te kunnen gebruiken.
 ``` diff
 import { Component } from '@angular/core';
-+ import { AngularFire, FirebaseListObservable } from 'angularfire2';
++ import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 @Component({
   selector: 'app-root',
@@ -148,14 +149,14 @@ import { Component } from '@angular/core';
 
 export class AppComponent {
 +  constructor(
-+    af: AngularFire
++    afDb: AngularFireDatabase
 +  ) {}
 }
 ```
 We hebben nu Firebase aan het project toegevoegd maar doen er nog niks mee. Om te testen of het echt werkt gaan Angular aan een lijst met items in Firebase koppelen. Pas **src/app/app.component.ts** aan naar het volgende:
 ``` diff
 import { Component } from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 @Component({
   selector: 'app-root',
@@ -167,9 +168,9 @@ export class AppComponent {
 +  items: FirebaseListObservable<any[]>;
 
   constructor(
-    af: AngularFire
+    afDb: AngularFireDatabase
   ) {
-+    this.items = af.database.list('/items');
++    this.items = afDb.list('/items');
   }
 }
 ```
@@ -319,7 +320,7 @@ Om de functie waar de knop naar verwijst te kunnen realiseren moeten we eerst ee
 En dat ziet er dan als volgt uit:
 ``` diff
 import { Component, OnInit } from '@angular/core';
-+ import { AngularFire, FirebaseListObservable } from 'angularfire2';
++ import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 @Component({
   selector: 'app-groep',
@@ -329,7 +330,7 @@ import { Component, OnInit } from '@angular/core';
 export class GroepComponent implements OnInit {
 +  groepen: FirebaseListObservable<any[]>;
   constructor(
-+    private af: AngularFire
++    private _afDb: AngularFireDatabase
   ) {}
 
 +  groepToevoegen(formData: any): void {
@@ -346,7 +347,7 @@ export class GroepComponent implements OnInit {
 +  }
 
   ngOnInit() {
-+    this.groepen = this.af.database.list('/groepen');
++    this.groepen = this._afDb.list('/groepen');
   }
 
 }
@@ -403,6 +404,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 + import { routing } from './app.routing';
 import { AppComponent } from './app.component';
@@ -421,6 +423,7 @@ export const firebaseConfig = {
     FormsModule,
     HttpModule,
     AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireDatabaseModule,
 +    routing
   ],
   declarations: [ AppComponent, GroepComponent ],
@@ -434,7 +437,7 @@ Uit het app component halen we nu alle referenties naar items weg en ook de fire
 **src/app/app.component.ts**:
 ``` diff
 import { Component } from '@angular/core';
-- import { AngularFire, FirebaseListObservable } from 'angularfire2';
+- import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 @Component({
   selector: 'app-root',
@@ -446,9 +449,9 @@ export class AppComponent {
 -  items: FirebaseListObservable<any[]>;
   
   constructor(
--    af: AngularFire
+-    afDb: AngularFireDatabase
   ) {
--    this.items = af.database.list('/items');
+-    this.items = afDb.list('/items');
     }
 }
 ```
@@ -485,7 +488,7 @@ Om gebruik te maken van dit model voegen we het eerst aan het groep component to
 * Vervolgens gebruiken we het model om een nieuwe groep aan te maken en door te geven aan Firebase in de groepToevoegen methode
 ``` diff
 import { Component, OnInit } from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 + import { Groep } from './groep.model';
 
@@ -498,7 +501,7 @@ import { AngularFire, FirebaseListObservable } from 'angularfire2';
 export class GroepComponent implements OnInit {
   groepen: FirebaseListObservable<any[]>;
   constructor(
-    private af: AngularFire
+    private _afDb: AngularFireDatabase
   ) {}
 
   groepToevoegen(formData: any): void {
@@ -515,7 +518,7 @@ export class GroepComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.groepen = this.af.database.list('/groepen');
+    this.groepen = this._afDb.list('/groepen');
   }
 
 }
@@ -528,14 +531,14 @@ Maak in het bestand **src/app/groep/groep.service.ts** aan.
 Importeer de nodige modules uit Angular, Firebase en het groep model:
 ``` typescript
 import { Injectable } from '@angular/core';
-import { AngularFire, FirebaseListObservable  } from 'angularfire2';
+import { AngularFireDatabase, FirebaseListObservable  } from 'angularfire2/database';
 import { Groep } from './groep.model';
 ```
 De functie om een groep toe te voegen aan Firebase zou hier terrecht moet komen. Daarnaast moeten we AngularFire instantieren en een FirebaseListObservable aanmaken die de groepen ophaalt en bijhoudt. Voor het ophalen van de groepen maken we nog een functie aan die we aan kunnen roepen vanuit het groep component om daar de groepen beschikbaar te stellen. Dat ziet er als volgt uit:
 
 ``` diff
 import { Injectable } from '@angular/core';
-import { AngularFire, FirebaseListObservable  } from 'angularfire2';
+import { AngularFireDatabase, FirebaseListObservable  } from 'angularfire2/database';
 import { Groep } from './groep.model';
 
 + @Injectable()
@@ -543,9 +546,9 @@ import { Groep } from './groep.model';
 +    private groepen: FirebaseListObservable<any[]>;
 
 +    constructor(
-+        private af: AngularFire
++        private _afDb: AngularFireDatabase
 +    ) {
-+        this.groepen = af.database.list('/groepen');
++        this.groepen = _afDb.list('/groepen');
 +    }
 
 +    groepToevoegen(groep: Groep): void {
@@ -572,6 +575,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 import { routing } from './app.routing';
 import { AppComponent } from './app.component';
@@ -591,6 +595,7 @@ export const firebaseConfig = {
     FormsModule,
     HttpModule,
     AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireDatabaseModule,
     routing
   ],
 +  providers: [
@@ -613,7 +618,7 @@ Om de groep service vervolgens te gebruiken in het groep component:
 
 ``` diff
 import { Component, OnInit } from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
+- import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 import { Groep } from './groep.model';
 + import { GroepService } from './groep.service';
@@ -626,20 +631,20 @@ import { Groep } from './groep.model';
 export class GroepComponent implements OnInit {
   groepen: FirebaseListObservable<any[]>;
   constructor(
-    private af: AngularFire,
-+    private groepService: GroepService
+-    private _afDb: AngularFireDatabase,
++    private _groepService: GroepService
   ) {}
 
 +  groepToevoegen(formData: any): void {
 +    if (formData.valid) {
 +      let groep: Groep = new Groep(formData.value.titel);
-+      this.groepService.groepToevoegen(groep);
++      this._groepService.groepToevoegen(groep);
 +      formData.reset();
 +    }    
 +  }
 
   ngOnInit() {
-+    this.groepen = this.groepService.getGroepen();
++    this.groepen = this._groepService.getGroepen();
   }
 
 }
@@ -663,7 +668,7 @@ export class Contact {
 Vervolgens maken we een service aan waarin we contacten op kunnen halen per groep en contacten kunnen opslaan. Maak een nieuw bestand **src/app/contact/contact.service.ts** aan in de folder contact met de volgende inhoud:
 ``` typescript
 import { Injectable } from '@angular/core';
-import { AngularFire, FirebaseListObservable  } from 'angularfire2';
+import { AngularFireDatabase, FirebaseListObservable  } from 'angularfire2/database';
 
 import { Contact } from './contact.model';
 
@@ -671,9 +676,9 @@ import { Contact } from './contact.model';
 export class ContactService {
     private contacten: FirebaseListObservable<any[]>;
     constructor(
-        private af: AngularFire
+        private _afDb: AngularFireDatabase
     ) {
-        this.contacten = af.database.list('/contacten');
+        this.contacten = _afDb.list('/contacten');
     }
 
     contactToevoegen(contact: Contact): void {
@@ -694,7 +699,7 @@ export class ContactService {
 Om het contact component aan te maken kopieëren we de code van het groep component en veranderen overal het woord groep(en) in contact(en). Dat geeft ons de volgende code in **src/app/contact/contact.component.ts**:
 ``` typescript
 import { Component, OnInit } from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 import { Contact } from './contact.model';
 import { ContactService } from './contact.service'; 
@@ -708,21 +713,21 @@ import { ContactService } from './contact.service';
 export class ContactComponent implements OnInit {
   contacten: FirebaseListObservable<any[]>;
   constructor(
-    private af: AngularFire,
-    private contactService: ContactService
+    private _afDb: AngularFireDatabase,
+    private _contactService: ContactService
   ) {}
   
 /*
  contactToevoegen(formData: any): void {
     if (formData.valid) {
       let contact: Contact = new Contact(formData.value.titel);
-      this.contactService.contactToevoegen(contact);
+      this._contactService.contactToevoegen(contact);
       formData.reset();
     }    
   }*/
   
   ngOnInit() {
-    this.contacten = this.contactService.getContacten();
+    this.contacten = this._contactService.getContacten();
   }
 }
 ```
@@ -733,7 +738,6 @@ Ok, we hebben nu een contact component, service en model maar hoe zijn deze cont
 * Voeg de router aan de constructor toe
 ``` diff
 import { Component, OnInit } from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
 + import { Router } from '@angular/router';
 
 import { Groep } from './groep.model';
@@ -747,25 +751,24 @@ import { GroepService } from './groep.service';
 export class GroepComponent implements OnInit {
   groepen: FirebaseListObservable<any[]>;
   constructor(
-    private af: AngularFire,
-    private groepService: GroepService,
-+    private router: Router
+    private _groepService: GroepService,
++    private _router: Router
   ) {}
 
   groepToevoegen(formData: any): void {
     if (formData.valid) {
       let groep: Groep = new Groep(formData.value.titel);
-      this.groepService.groepToevoegen(groep);
+      this._groepService.groepToevoegen(groep);
       formData.reset();
     }    
   }
 
 +  selecteerGroep(groepId: string): void {
-+    this.router.navigate(['/groepen', groepId]);
++    this._router.navigate(['/groepen', groepId]);
 +  }
 
   ngOnInit() {
-    this.groepen = this.groepService.getGroepen();
+    this.groepen = this._groepService.getGroepen();
   }
 
 }
@@ -818,7 +821,7 @@ Door :id aan de route toe te voegen wordt het groepId beschikbaar als een route 
 * In de getContacten functie kunnen we nu het groepId mee geven
 ``` diff
 import { Component, OnInit } from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
+- import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 + import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { Contact } from './contact.model';
@@ -835,34 +838,34 @@ export class ContactComponent implements OnInit {
 +  groepId: string;
 
   constructor(
-    private af: AngularFire,
-    private contactService: ContactService,
-+    private route: ActivatedRoute,
-+    private router: Router
+-    private _afDb: AngularFireDatabase,
+    private _contactService: ContactService,
++    private _route: ActivatedRoute,
++    private _router: Router
   ) {}
   
 /*
  contactToevoegen(formData: any): void {
     if (formData.valid) {
       let contact: Contact = new Contact(formData.value.titel);
-      this.contactService.contactToevoegen(contact);
+      this._contactService.contactToevoegen(contact);
       formData.reset();
     }    
   }*/
   
   ngOnInit() {
-+    this.route.params.forEach((params: Params) => {
++    this._route.params.forEach((params: Params) => {
 +      let id = params['id'];
 +      this.groepId = id;
 +    });
-+    this.contacten = this.contactService.getContacten(this.groepId);
++    this.contacten = this._contactService.getContacten(this.groepId);
   }
 }
 ```
 Dit zal voor een foutmelding zorgen omdat de functie getContacten in **src/app/contact/contact.service.ts** nog geen parameter verwacht. Als laatste moeten we hiervoor nog de functie getContacten in de contact service aanpassen, het is namelijk ook niet meer de bedoeling om alle contacten binnen te halen, **src/app/contact/contact.service.ts**:
 ``` diff
 import { Injectable } from '@angular/core';
-import { AngularFire, FirebaseListObservable  } from 'angularfire2';
+import { AngularFireDatabase, FirebaseListObservable  } from 'angularfire2/database';
 
 import { Contact } from './contact.model';
 
@@ -870,9 +873,9 @@ import { Contact } from './contact.model';
 export class ContactService {
     private contacten: FirebaseListObservable<any[]>;
     constructor(
-        private af: AngularFire
+        private _afDb: AngularFireDatabase
     ) {
-        this.contacten = af.database.list('/contacten');
+        this.contacten = _afDb.list('/contacten');
     }
 
     contactToevoegen(contact: Contact): void {
@@ -886,7 +889,7 @@ export class ContactService {
     }
 
 +    getContacten(id: string): FirebaseListObservable<any[]> {
-+        return this.af.database.list('/contacten', {
++        return this._afDb.list('/contacten', {
 +            query: {
 +                orderByChild: 'groepId',
 +                equalTo: id 
@@ -917,6 +920,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 import { routing } from './app.routing';
 import { AppComponent } from './app.component';
@@ -938,6 +942,7 @@ export const firebaseConfig = {
     FormsModule,
     HttpModule,
     AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireDatabaseModule,
     routing
   ],
   providers: [
@@ -981,7 +986,6 @@ En als het goed is zie je hier het overzicht van je groepen. Klik een groep aan 
 Het principe is hetzelfde als het formulier om een groep aan te maken. We willen hier alleen meer velden vullen. Om de functie in het contact component af te ronden zetten we de functie contactToevoegen weer aan en passen deze als volgt aan, **src/app/contact/contact.component.ts**:
 ``` diff
 import { Component, OnInit } from '@angular/core';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { Contact } from './contact.model';
@@ -998,26 +1002,25 @@ export class ContactComponent implements OnInit {
   groepId: string;
 
   constructor(
-    private af: AngularFire,
-    private contactService: ContactService,
-    private route: ActivatedRoute,
-    private router: Router
+    private _contactService: ContactService,
+    private _route: ActivatedRoute,
+    private _router: Router
   ) {}
   
 +  contactToevoegen(formData: any): void {
 +    if (formData.valid) {
 +      let contact: Contact = new Contact(this.groepId, formData.value.naam, formData.value.adres, formData.value.tel);
-+      this.contactService.contactToevoegen(contact);
++      this._contactService.contactToevoegen(contact);
 +      formData.reset();
 +    }    
 +  }
   
   ngOnInit() {
-    this.route.params.forEach((params: Params) => {
+    this._route.params.forEach((params: Params) => {
       let id = params['id'];
       this.groepId = id;
     });
-    this.contacten = this.contactService.getContacten(this.groepId);
+    this.contacten = this._contactService.getContacten(this.groepId);
   }
 }
 ```
